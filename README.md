@@ -10,6 +10,7 @@ NuPendency will show you the dependencies as "force-directed-graph"
 - Press "Add new graph"
 - Enter the name of the package
 - Wait for graph to be built!
+
 ### Some more:
 #### Taking too long?
 It may happen that large graphs may take some time, e.g when having set up a large depth in "Settings". In that case, simply presse the "Stop"-button.
