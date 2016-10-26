@@ -93,7 +93,8 @@
 
                                 <ComboBox ItemsSource="{Binding AllFoundRootVersions}" SelectedItem="{Binding SelectedVersion, Mode=TwoWay}" Width="100" Margin="3,0.2,3,0"
                                           Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" VerticalAlignment="Center"
-                                          IsEditable="{Binding IsActive, Converter={StaticResource InverseBoolConverter}}" />
+                                          IsEditable="False"
+                                          IsEnabled="{Binding IsActive, Converter={StaticResource InverseBoolConverter}}" />
 
                                 <Button Content="x" Grid.Row="0" Grid.Column="4" HorizontalAlignment="Right" VerticalAlignment="Top"
                                         Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}, Path=DataContext.CmdDeleteGraph}"

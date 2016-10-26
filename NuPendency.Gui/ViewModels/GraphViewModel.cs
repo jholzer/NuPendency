@@ -252,7 +252,7 @@ namespace NuPendency.Gui.ViewModels
             if (!GraphHandler.Result.Packages.Any())
                 return;
             var rootNuGetPackage = GraphHandler.Result.Packages.OfType<RootNuGetPackage>().Single();
-            AllFoundRootVersions = rootNuGetPackage.AvailableVersions;
+            AllFoundRootVersions = rootNuGetPackage.AvailableVersions.OrderByDescending(version => version);
             SelectedVersion = AllFoundRootVersions.FirstOrDefault(version => version == rootNuGetPackage.VersionInfo.Version);
         }
 
