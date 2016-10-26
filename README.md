@@ -25,7 +25,8 @@ There are some settings, most regarding on how the graph is bein animated. Feel 
 - Load packages from Visual Studio-Solution/Projects
 - "Explore from here" (e.g. right-click on node and use it as root-node for a new dependency graph)
 - Improve this documentation... ;-)
+
 # Participate? Yes please!
 Feel free to bring up ideas, fork, send improvements!
 ###### Credits:
-THe force-directed-graph is based on https://github.com/Orbifold/Graphite (Thanks for the good example!)
+The force-directed-graph is based on https://github.com/Orbifold/Graphite (Thanks for the good example!)
