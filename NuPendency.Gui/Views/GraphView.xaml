@@ -1,0 +1,98 @@
+﻿<UserControl x:Class="NuPendency.Gui.Views.GraphView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:viewModels="clr-namespace:NuPendency.Gui.ViewModels"
+             xmlns:converters="clr-namespace:NuPendency.Gui.Converters"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
+             xmlns:model="clr-namespace:NuPendency.Interfaces.Model;assembly=NuPendency.Interfaces"
+             mc:Ignorable="d"
+             d:DesignHeight="600" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance viewModels:DesignGraphViewModel, IsDesignTimeCreatable=True}">
+
+    <UserControl.Resources>
+        <converters:AddArbitraryConverter x:Key="AddArbitraryConverterHorizontal" Arbitrary="50" />
+        <converters:AddArbitraryConverter x:Key="AddArbitraryConverterVertical" Arbitrary="50" />
+        <converters:PackageTypeToBorderThicknessConverter x:Key="PackageTypeToBorderThicknessConverter" BorderThicknessNormalValue="1" BorderThicknessRootValue="3" />
+        <converters:PackageDepthToOpacityConverter x:Key="PackageDepthToOpacityConverter" Step="0.075" />
+        <converters:SelectionToColorConverter x:Key="SelectionToColorConverter" />
+        <converters:SelectionToLineColorConverter x:Key="SelectionToLineColorConverter" />
+        <converters:NegativeIntConverter x:Key="NegativeIntConverter" />
+        <converters:PackageTypeToVisibilityConverter MatchingType="{x:Type model:MissingNuGetPackage}" MatchVisibility="Visible" NoMatchVisibility="Collapsed" x:Key="VisibleIfMissingPackageConverter" />
+    </UserControl.Resources>
+    <ScrollViewer>
+
+        <Grid>
+            <ItemsControl ItemsSource="{Binding GraphNodes}" Canvas.ZIndex="0" Name="nodesPanel" Margin="10"
+                          PreviewMouseUp="OnPreviewMouseUp"
+                          MouseUp="OnPreviewMouseUp"
+                          MouseMove="OnMouseMove">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemContainerStyle>
+                    <Style TargetType="ContentPresenter">
+                        <Setter Property="Canvas.Left" Value="{Binding Path=Position.X}" />
+                        <Setter Property="Canvas.Top" Value="{Binding Path=Position.Y}" />
+                        <Setter Property="Canvas.ZIndex" Value="{Binding Path=Package.Depth, Converter={StaticResource NegativeIntConverter}}" />
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type viewModels:GraphNode}">
+                        <Border MinWidth="100"
+                                BorderThickness="{Binding Package, Converter={StaticResource PackageTypeToBorderThicknessConverter}}"
+                                CornerRadius="5" BorderBrush="Black"
+                                Opacity="{Binding Package.Depth, Converter={StaticResource PackageDepthToOpacityConverter}}"
+                                Background="{Binding Selected, Converter={StaticResource SelectionToColorConverter}}"
+                                PreviewMouseDown="OnPreviewMouseDown"
+                                MouseLeave="OnMouseLeave">
+                            <Border.Effect>
+                                <DropShadowEffect Opacity="0.5" />
+                            </Border.Effect>
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Vertical">
+                                    <Label Content="{Binding Package.PackageId}" Margin="0,0,0,-5" />
+                                    <Label Content="{Binding Package.VersionInfo}" Margin="0,-5,0,-5" />
+                                    <StackPanel Orientation="Horizontal" Margin="0,-5,0,0">
+                                        <Label Content="Level:" />
+                                        <Label Content="{Binding Package.Depth}" />
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <fa:ImageAwesome Icon="Question" Height="32" Width="32" Visibility="{Binding Package, Converter={StaticResource VisibleIfMissingPackageConverter}}" />
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <ItemsControl ItemsSource="{Binding GraphEdges}" Canvas.ZIndex="-2">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemContainerStyle>
+                    <Style TargetType="ContentPresenter">
+                        <Setter Property="Line.X1" Value="{Binding Path=StartPoint.X}" />
+                        <Setter Property="Line.Y1" Value="{Binding Path=StartPoint.Y}" />
+                        <Setter Property="Line.X2" Value="{Binding Path=EndPoint.X}" />
+                        <Setter Property="Line.Y2" Value="{Binding Path=EndPoint.Y}" />
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type viewModels:GraphEdge}">
+                        <Line Stroke="{Binding Selected, Converter={StaticResource SelectionToLineColorConverter}}" StrokeThickness="2"
+                              X1="{Binding StartPoint.X, Converter={StaticResource AddArbitraryConverterHorizontal}}"
+                              Y1="{Binding StartPoint.Y, Converter={StaticResource AddArbitraryConverterVertical}}"
+                              X2="{Binding EndPoint.X, Converter={StaticResource AddArbitraryConverterHorizontal}}"
+                              Y2="{Binding EndPoint.Y, Converter={StaticResource AddArbitraryConverterVertical}}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,141 @@
+﻿<Window x:Class="NuPendency.Gui.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:views="clr-namespace:NuPendency.Gui.Views"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:viewModels1="clr-namespace:NuPendency.Gui.ViewModels"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
+        xmlns:converters1="clr-namespace:NuPendency.Gui.Converters"
+        xmlns:ui="clr-namespace:NuPendency.Commons.Ui;assembly=NuPendency.Commons"
+        mc:Ignorable="d"
+        DataContext="{Binding MainWindowViewModel, Source={StaticResource Locator}}"
+        d:DesignHeight="600" d:DesignWidth="1024"
+        Title="NuPendency" Icon="/NuPendency.Gui;component/Resources/nuPendency.ico">
+    <Window.Resources>
+        <converters1:NullToVisibilityConverter NullValue="Hidden" NotNullValue="Visible" x:Key="NullToHiddenConverter" />
+        <converters1:BoolToVisibilityConverter TrueValue="Visible" FalseValue="Collapsed" x:Key="BoolToVisibilityConverter" />
+        <converters1:BoolToVisibilityConverter TrueValue="Collapsed" FalseValue="Visible" x:Key="InverseBoolToVisibilityConverter" />
+        <converters1:InverseBoolConverter x:Key="InverseBoolConverter" />
+        <Style TargetType="Button">
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+    </Window.Resources>
+    <DockPanel LastChildFill="True">
+
+        <Grid>
+
+            <Grid Canvas.ZIndex="1" Opacity="10" Visibility="{Binding DialogViewModel, Converter={StaticResource NullToHiddenConverter}}">
+                <Grid.Background>
+                    <SolidColorBrush Color="#FF5A5A5A" Opacity="0.5" />
+                </Grid.Background>
+
+                <ContentPresenter Content="{Binding DialogViewModel}" Margin="10">
+                    <ContentPresenter.Resources>
+                        <DataTemplate DataType="{x:Type ui:InputBoxViewModel}">
+                            <Border Background="White" CornerRadius="5" Height="140" Width="400">
+                                <Border.Effect>
+                                    <DropShadowEffect />
+                                </Border.Effect>
+                                <ui:InputBoxView />
+                            </Border>
+                        </DataTemplate>
+                    </ContentPresenter.Resources>
+                </ContentPresenter>
+            </Grid>
+
+            <Grid Canvas.ZIndex="0">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal">
+                    <Button Command="{Binding CmdAddNewGraph}">
+                        <StackPanel Margin="3" Orientation="Horizontal">
+                            <fa:ImageAwesome Icon="Plus" Height="16" Width="16" />
+                            <Label Content="Add new graph" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+                <ListView Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Graphs}" MinWidth="250"
+                          SelectedItem="{Binding SelectedGraph}"
+                          HorizontalContentAlignment="Stretch">
+                    <ListView.ItemTemplate>
+                        <DataTemplate DataType="viewModels1:GraphViewModel">
+                            <Grid>
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+
+                                <Label Content="{Binding Name}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" FontWeight="Bold" VerticalAlignment="Center" />
+
+                                <ComboBox ItemsSource="{Binding AllFoundRootVersions}" SelectedItem="{Binding SelectedVersion, Mode=TwoWay}" Width="100" Margin="3,0.2,3,0"
+                                          Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" VerticalAlignment="Center"
+                                          IsEditable="{Binding IsActive, Converter={StaticResource InverseBoolConverter}}" />
+
+                                <Button Content="x" Grid.Row="0" Grid.Column="4" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                        Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}, Path=DataContext.CmdDeleteGraph}"
+                                        CommandParameter="{Binding ResolutionResult}" />
+
+                                <Label Content="Packages:" Grid.Row="1" Grid.Column="0" />
+                                <Label Content="{Binding NodeCount}" Grid.Row="1" Grid.Column="1" />
+
+                                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="3">
+                                    <Button HorizontalAlignment="Right" Visibility="{Binding IsActive, Converter={StaticResource BoolToVisibilityConverter}}"
+                                        Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}, Path=DataContext.CmdCancel}"
+                                        CommandParameter="{Binding ResolutionResult}">
+                                        <fa:ImageAwesome Icon="Stop" Height="16" />
+                                    </Button>
+
+                                    <Button HorizontalAlignment="Right" Visibility="{Binding IsActive, Converter={StaticResource InverseBoolToVisibilityConverter}}"
+                                        Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}, Path=DataContext.CmdRefreshGraph}"
+                                        CommandParameter="{Binding ResolutionResult}">
+                                        <fa:ImageAwesome Icon="Refresh" Height="16" />
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+                <Expander Grid.Row="2" Grid.Column="0" Header="Repositories">
+                    <views:StringCollectionEditorView  DataContext="{Binding RepositoryEditorViewModel}" />
+                </Expander>
+
+                <Expander Grid.Row="3" Grid.Column="0" Header="Excluded packages">
+                    <views:StringCollectionEditorView DataContext="{Binding ExclusionsEditorViewModel}" />
+                </Expander>
+
+                <Expander Grid.Row="4" Grid.Column="0" Header="Settings">
+                    <xctk:PropertyGrid SelectedObject="{Binding Settings}" ShowSearchBox="False" ShowSortOptions="False" ShowSummary="False" ShowTitle="False" />
+                </Expander>
+
+                <GridSplitter Grid.Row="0" Grid.Column="1" Width="4" HorizontalAlignment="Stretch" Grid.RowSpan="5" />
+
+                <views:GraphView DataContext="{Binding SelectedGraph}" Grid.Row="0" Grid.Column="2" Grid.RowSpan="5" />
+            </Grid>
+        </Grid>
+    </DockPanel>
+</Window>
