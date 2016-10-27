@@ -183,7 +183,6 @@ namespace NuPendency.Gui.ViewModels
 
                     matchingEdge.StartPoint = node.Position;
                     matchingEdge.EndPoint = otherNode.Position;
-
                     matchingEdge.Selected = node.Selected || otherNode.Selected;
                 }
             }
@@ -223,7 +222,7 @@ namespace NuPendency.Gui.ViewModels
                 }
 
                 //compute the attraction on this node, only to the adjacent nodes
-                foreach (var child in nodes.Where(conNode => node.Package.Dependencies.ToArray().Contains(conNode.Package.Id)))
+                foreach (var child in GraphEdges.Where(edge => edge.IsNodeContainedInEdge(node)).Select(edge => edge.GetOtherNode(node)))
                 {
                     var hooke = AttractionForce(node.Position, child.Position);
                     f.X += hooke.X;
