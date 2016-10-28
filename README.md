@@ -33,6 +33,7 @@ There are some settings, most regarding on how the graph is bein animated. Feel 
 Feel free to bring up ideas, fork, send improvements!
 
 # Download
-Wanna get it and don´t want to build it yourself? Ok... [download here (external link)] (http://emvoll.de/NuPendency/NuPendency_ReleasePortable.zip)
+Wanna get it and don´t want to build it yourself? Ok... 
+Find the latest build in the [Release section] (https://github.com/jholzer/NuPendency/releases)
 ###### Credits:
 The force-directed-graph is based on https://github.com/Orbifold/Graphite (Thanks for the good example!)
