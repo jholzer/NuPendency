@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension"
+     xmlns:fire="http://schemas.microsoft.com/wix/FirewallExtension">
+  <?define ResourcesDir="$(var.ProjectDir)\Resources" ?>
+  <?define UpgradeCode="509DC89A-274E-4199-8E50-FC107602CC45" ?>
+
+
+  <Product Id="*" Name="NuPendency" Language="1033"
+           Version="!(bind.FileVersion.NUPENDENCYEXE)" UpgradeCode="$(var.UpgradeCode)"
+           Manufacturer="NuPendency">
+    <Package InstallerVersion="200"
+             Compressed="yes"
+             InstallScope="perMachine"
+             Description="NuGet dependencies viewer"
+             Manufacturer="NuPendency"
+             Platform="x86" />
+
+
+    <Media
+      Id="1"
+      Cabinet="media1.cab"
+      EmbedCab="yes" />
+
+    <Upgrade Id="$(var.UpgradeCode)">
+      <UpgradeVersion Minimum="!(bind.FileVersion.NUPENDENCYEXE)"
+                      IncludeMinimum="no"
+                      OnlyDetect="yes"
+                      Language="1033"
+                      Property="NEWPRODUCTFOUND" />
+      <UpgradeVersion Minimum="0.1.0.0"
+                      IncludeMinimum="yes"
+                      Maximum="!(bind.FileVersion.NUPENDENCYEXE)"
+                      IncludeMaximum="no"
+                      Language="1033"
+                      Property="UPGRADEFOUND" />
+      <UpgradeVersion Minimum="0.1.0.0" Maximum="!(bind.FileVersion.NUPENDENCYEXE)"
+                      Property="PREVIOUSVERSIONSINSTALLED"
+                      IncludeMinimum="yes" IncludeMaximum="no" />
+    </Upgrade>
+
+
+    <PropertyRef Id="NETFRAMEWORK45" />
+
+
+    <UI>
+      <UIRef Id="WixUI_InstallDir" />
+      <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="InstallDirDlg" Order="2">1</Publish>
+      <Publish Dialog="InstallDirDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg" Order="2">1</Publish>
+    </UI>
+    
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
+
+    <Icon Id="SuperFormIcon.ico" SourceFile="$(var.ResourcesDir)\nuPendency.ico" />
+    <Property Id="ARPPRODUCTICON" Value="SuperFormIcon.ico" />
+
+    <WixVariable Id="WixUIDialogBmp" Value="$(var.ResourcesDir)\NuPendency_background.bmp" />
+
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="DesktopFolder" Name="Desktop">
+        <Component Id="ApplicationShortcutDesktop" Guid="5DB1A0E7-7BA6-44AC-B153-5D2BC149B724">
+          <Shortcut Id="ApplicationDesktopShortcut"
+                    Name="NuPendency"
+                    Description="NuGet dependencies viewer"
+                    Target="[#NUPENDENCYEXE]"
+                    WorkingDirectory="INSTALLDIR"
+                    Icon="SuperFormIcon.ico" />
+          <RemoveFolder Id="DesktopFolder" On="uninstall" />
+          <RegistryValue
+            Root="HKCU"
+            Key="Software\PRODUCT_NAME"
+            Name="installedDesktop"
+            Type="integer"
+            Value="1"
+            KeyPath="yes" />
+        </Component>
+      </Directory>
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="NuPendencyProgramFolder" Name="NuPendency">
+          <Component Id="ApplicationShortcut" Guid="22992F3F-90BE-4BBC-A9C3-5B9FFABCF113">
+            <Shortcut Id="ApplicationStartMenuShortcut"
+                      Name="NuPendency"
+                      Description="NuGet dependencies viewer"
+                      Target="[#NUPENDENCYEXE]"
+                      WorkingDirectory="INSTALLDIR"
+                      Icon="SuperFormIcon.ico" />
+            <RemoveFolder Id="NuPendencyProgramFolder" On="uninstall" />
+            <RegistryValue
+              Root="HKCU"
+              Key="Software\PRODUCT_NAME"
+              Name="installedStartMenue"
+              Type="integer"
+              Value="1"
+              KeyPath="yes" />
+          </Component>
+        </Directory>
+      </Directory>
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLDIR" Name="NuPendency" />
+      </Directory>
+
+      
+
+    </Directory>
+
+
+    <Feature Id="ProductFeature" Title="NuPendency Setup" Level="1">
+      <ComponentGroupRef Id="NuPendency" />
+      <ComponentRef Id="ApplicationShortcutDesktop" />
+      <ComponentRef Id="ApplicationShortcut" />
+
+      
+
+    </Feature>
+
+    <!-- Das was nun folgt ist schon ein wenig Finetuning CustomActions
+        siehe auch http://wix.sourceforge.net/manual-wix3/wix_xsd_customaction.htm
+    -->
+    <!-- Keinen Downgrade zulassen -->
+    <CustomAction Id="PreventDowngrading"
+                  Error="Es ist bereits eine neuere Version installiert." />
+
+    <!-- Nun noch die auszuführende Reihenfolg angeben
+        siehe auch http://wix.sourceforge.net/manual-wix3/wix_xsd_installexecutesequence.htm
+    -->
+
+
+    <InstallExecuteSequence>
+      <Custom Action="PreventDowngrading"
+              After="FindRelatedProducts">
+        NEWPRODUCTFOUND
+      </Custom>
+      <RemoveExistingProducts After="InstallFinalize" />
+    </InstallExecuteSequence>
+
+    <!-- Wenn ein neueres Produkt gerunden wurde, soll das auch in der UI ausgegeben werden
+        siehe auch http://wix.sourceforge.net/manual-wix3/wix_xsd_installuisequence.htm
+    -->
+    <InstallUISequence>
+      <Custom Action="PreventDowngrading"
+              After="FindRelatedProducts">
+        NEWPRODUCTFOUND
+      </Custom>
+    </InstallUISequence>
+
+  </Product>
+</Wix>
