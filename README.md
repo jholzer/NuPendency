@@ -1,6 +1,8 @@
 # NuPendency
 NuPendency is a small tool that let´s you explore your nuGet-dependency structure. Simply tell NuPendency the package name and it will show you the depending packages...
 
+![alt tag](https://ci.appveyor.com/api/projects/status/gum550q6d7agra1a?svg=true)
+
 NuPendency will show you the dependencies as "force-directed-graph"
 
 ![alt tag](https://raw.githubusercontent.com/jholzer/NuPendency/master/NuPendencyScreenshot.png)
