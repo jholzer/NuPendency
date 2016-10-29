@@ -28,6 +28,7 @@ There are some settings, most regarding on how the graph is bein animated. Feel 
 - Load packages from Visual Studio-Solution/Projects
 - "Explore from here" (e.g. right-click on node and use it as root-node for a new dependency graph)
 - Find package across all open graphs
+- Show referencing packages within a graph up to root package 
 - Logging-window
 - Improve this documentation... ;-)
 
