@@ -1,6 +1,8 @@
 # NuPendency
 NuPendency is a small tool that let´s you explore your nuGet-dependency structure. Simply tell NuPendency the package name and it will show you the depending packages...
 
+![alt tag](https://ci.appveyor.com/api/projects/status/gum550q6d7agra1a?svg=true)
+
 NuPendency will show you the dependencies as "force-directed-graph"
 
 ![alt tag](https://raw.githubusercontent.com/jholzer/NuPendency/master/NuPendencyScreenshot.png)
@@ -26,6 +28,7 @@ There are some settings, most regarding on how the graph is bein animated. Feel 
 - Load packages from Visual Studio-Solution/Projects
 - "Explore from here" (e.g. right-click on node and use it as root-node for a new dependency graph)
 - Find package across all open graphs
+- Show referencing packages within a graph up to root package 
 - Logging-window
 - Improve this documentation... ;-)
 
@@ -33,6 +36,7 @@ There are some settings, most regarding on how the graph is bein animated. Feel 
 Feel free to bring up ideas, fork, send improvements!
 
 # Download
-Wanna get it and don´t want to build it yourself? Ok... [download here (external link)] (http://emvoll.de/NuPendency/NuPendency_ReleasePortable.zip)
+Wanna get it and don´t want to build it yourself? Ok... 
+Find the latest build in the [Release section] (https://github.com/jholzer/NuPendency/releases)
 ###### Credits:
 The force-directed-graph is based on https://github.com/Orbifold/Graphite (Thanks for the good example!)
