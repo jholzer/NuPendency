@@ -8,6 +8,16 @@ namespace NuPendency.Gui.ViewModels
         private const double c_AttractionConstant = 10;
         private const double c_RepulsionConstant = 1000;
 
+        public static double AtLeast(this double inValue, double minValue)
+        {
+            return inValue < minValue ? minValue : inValue;
+        }
+
+        public static double AtMost(this double inValue, double maxValue)
+        {
+            return inValue > maxValue ? maxValue : inValue;
+        }
+
         public static Vector CalcAttractionForce(this GraphNode node1, GraphNode node2, double springLength)
         {
             int proximity = (int)Math.Max(CalcDistance(node1.Position, node2.Position), 1);
@@ -34,11 +44,6 @@ namespace NuPendency.Gui.ViewModels
             double xDiff = point2.X - point1.X;
             double yDiff = point2.Y - point1.Y;
             return Math.Atan2(yDiff, xDiff);
-        }
-
-        public static double AtLeast(this double inValue, double minValue)
-        {
-            return inValue < minValue ? minValue : inValue;
         }
     }
 }

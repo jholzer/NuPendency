@@ -41,10 +41,10 @@ namespace NuPendency.Gui.Views
 
         private static readonly ILog s_Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private CompositeDisposable Disposables = new CompositeDisposable();
-        private bool isDragging;
-        private GraphNode nodeBeingDragged;
-        private Point offsetWithinNode;
+        private readonly CompositeDisposable m_Disposables = new CompositeDisposable();
+        private bool m_IsDragging;
+        private GraphNode m_NodeBeingDragged;
+        private Point m_OffsetWithinNode;
 
         public GraphControl()
         {
@@ -53,7 +53,7 @@ namespace NuPendency.Gui.Views
             Observable.Interval(TimeSpan.FromMilliseconds(50))
                 .ObserveOnDispatcher()
                 .Subscribe(_ => CalculatePositions())
-                .AddDisposableTo(Disposables);
+                .AddDisposableTo(m_Disposables);
         }
 
         public double AttractionStrength
@@ -100,7 +100,13 @@ namespace NuPendency.Gui.Views
 
         public void Dispose()
         {
-            Disposables.Dispose();
+            m_Disposables.Dispose();
+        }
+
+        private static void DeSelectAllNodes(GraphViewModel graphViewModel)
+        {
+            foreach (var node in graphViewModel.GraphNodes)
+                node.Selected = false;
         }
 
         private static double GetMovementStepSize(GraphNode node)
@@ -138,22 +144,7 @@ namespace NuPendency.Gui.Views
             }
         }
 
-        private void CalculatePositions()
-        {
-            var nodes = GraphNodes.ToArray();
-
-            try
-            {
-                CalculateRelativePosition(nodes);
-                CalculateEdges(nodes);
-            }
-            catch (Exception ex)
-            {
-                s_Logger.ErrorFormat("Error while calculating graph: {0}", ex);
-            }
-        }
-
-        private void CalculateRelativePosition(GraphNode[] nodes)
+        private void CalculateNodes(GraphNode[] nodes)
         {
             foreach (var node in nodes)
             {
@@ -186,29 +177,38 @@ namespace NuPendency.Gui.Views
 
                 if (GetMovementStepSize(node) > 1)
                 {
-                    var newX = (int)(node.Position.X + TimeStep * node.Velocity.X).AtLeast(0);
-                    var newY = (int)(node.Position.Y + TimeStep * node.Velocity.Y).AtLeast(0);
+                    var newX = (int)(node.Position.X + TimeStep * node.Velocity.X).AtLeast(0).AtMost(ActualWidth - 100);
+                    var newY = (int)(node.Position.Y + TimeStep * node.Velocity.Y).AtLeast(0).AtMost(ActualWidth - 80);
 
                     node.Position = new Point(newX, newY);
                 }
             }
         }
 
-        private void DeSelectAllNodes(GraphViewModel graphViewModel)
+        private void CalculatePositions()
         {
-            foreach (var node in graphViewModel.GraphNodes)
-                node.Selected = false;
+            var nodes = GraphNodes.ToArray();
+
+            try
+            {
+                CalculateNodes(nodes);
+                CalculateEdges(nodes);
+            }
+            catch (Exception ex)
+            {
+                s_Logger.ErrorFormat("Error while calculating graph: {0}", ex);
+            }
         }
 
         private void OnMouseLeave(object sender, MouseEventArgs e)
         {
-            nodeBeingDragged = null;
-            isDragging = false;
+            m_NodeBeingDragged = null;
+            m_IsDragging = false;
         }
 
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
-            if (!isDragging)
+            if (!m_IsDragging)
                 return;
 
             var frameworkElement = sender as FrameworkElement;
@@ -216,10 +216,10 @@ namespace NuPendency.Gui.Views
                 return;
 
             var position = e.GetPosition(frameworkElement);
-            position.X += (-offsetWithinNode.X);
-            position.Y += (-offsetWithinNode.Y);
+            position.X += (-m_OffsetWithinNode.X);
+            position.Y += (-m_OffsetWithinNode.Y);
 
-            nodeBeingDragged.Position = position;
+            m_NodeBeingDragged.Position = position;
         }
 
         private void OnPreviewMouseDown(object sender, MouseButtonEventArgs e)
@@ -230,31 +230,31 @@ namespace NuPendency.Gui.Views
             if (frameworkElement == null)
                 return;
 
-            nodeBeingDragged = frameworkElement.DataContext as GraphNode;
-            if (nodeBeingDragged == null)
+            m_NodeBeingDragged = frameworkElement.DataContext as GraphNode;
+            if (m_NodeBeingDragged == null)
                 return;
 
-            nodeBeingDragged.Selected = true;
+            m_NodeBeingDragged.Selected = true;
 
             if (e.ClickCount == 2)
             {
-                nodeBeingDragged.Locked = !nodeBeingDragged.Locked;
+                m_NodeBeingDragged.Locked = !m_NodeBeingDragged.Locked;
             }
             else if (e.ClickCount == 1)
             {
-                nodeBeingDragged.Locked = true;
-                nodeBeingDragged.LockedForMove = true;
-                offsetWithinNode = e.GetPosition(frameworkElement);
-                isDragging = true;
+                m_NodeBeingDragged.Locked = true;
+                m_NodeBeingDragged.LockedForMove = true;
+                m_OffsetWithinNode = e.GetPosition(frameworkElement);
+                m_IsDragging = true;
             }
         }
 
         private void OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (nodeBeingDragged == null)
+            if (m_NodeBeingDragged == null)
                 return;
-            nodeBeingDragged.LockedForMove = false;
-            isDragging = false;
+            m_NodeBeingDragged.LockedForMove = false;
+            m_IsDragging = false;
         }
 
         private Point RepulsionForce(Point node1, Point node2)
