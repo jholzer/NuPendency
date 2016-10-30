@@ -135,7 +135,13 @@
 
                 <GridSplitter Grid.Row="0" Grid.Column="1" Width="4" HorizontalAlignment="Stretch" Grid.RowSpan="5" />
 
-                <views:GraphView DataContext="{Binding SelectedGraph}" Grid.Row="0" Grid.Column="2" Grid.RowSpan="5" />
+                <ContentPresenter Content="{Binding SelectedGraph}" Margin="10" Grid.Row="0" Grid.Column="2" Grid.RowSpan="5">
+                    <ContentPresenter.Resources>
+                        <DataTemplate DataType="{x:Type viewModels1:GraphViewModel}">
+                            <views:GraphView />
+                        </DataTemplate>
+                    </ContentPresenter.Resources>
+                </ContentPresenter>
             </Grid>
         </Grid>
     </DockPanel>

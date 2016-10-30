@@ -4,7 +4,6 @@ using log4net;
 using NuPendency.Commons.Extensions;
 using NuPendency.Commons.Interfaces;
 using NuPendency.Gui.Design;
-using NuPendency.Gui.Views;
 using NuPendency.Interfaces;
 using NuPendency.Interfaces.Model;
 using NuPendency.Interfaces.Services;
@@ -16,9 +15,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
 
 namespace NuPendency.Gui.ViewModels
 {
@@ -59,7 +56,6 @@ namespace NuPendency.Gui.ViewModels
 
         public ReactiveCommand<Unit> CmdPreviewMouseDown { get; set; }
         public ReactiveCommand<Unit> CmdPreviewMouseUp { get; set; }
-
         public ObservableCollectionExtended<GraphEdge> GraphEdges { get; } = new ObservableCollectionExtended<GraphEdge>();
         public IGraphHandler GraphHandler { get; }
         public ObservableCollectionExtended<GraphNode> GraphNodes { get; } = new ObservableCollectionExtended<GraphNode>();
@@ -78,6 +74,8 @@ namespace NuPendency.Gui.ViewModels
                 raisePropertyChanged();
             }
         }
+
+        public Settings Settings => m_SettingsManager.Settings;
 
         public GraphNode CreateDataNode(NuGetPackage pack)
         {
@@ -120,130 +118,9 @@ namespace NuPendency.Gui.ViewModels
                 .ObserveOnDispatcher()
                 .Bind(GraphNodes)
                 .Do(_ => TryUpdateNodeLevel())
+                .Do(_ => RemoveOrphanedEdges())
                 .Subscribe()
                 .AddDisposableTo(Disposables);
-
-            Observable.Interval(TimeSpan.FromMilliseconds(50))
-                .ObserveOnDispatcher()
-                .Subscribe(_ => CalculatePositions())
-                .AddDisposableTo(Disposables);
-
-            CmdPreviewMouseDown = ReactiveCommand.CreateAsyncTask(o =>
-            {
-                MouseDownCommandParameters param = o as MouseDownCommandParameters;
-                if (param != null)
-                {
-                    if (param.ChangedButton == MouseButton.Left)
-                    {
-                        param.SenderNode.Position = param.Position;
-                        param.SenderNode.LockedForMove = true;
-                    }
-                    else if (param.ChangedButton == MouseButton.Right)
-                    {
-                        param.SenderNode.LockedForMove = false;
-                    }
-                }
-                return Task.FromResult(Unit.Default);
-            });
-
-            CmdPreviewMouseUp = ReactiveCommand.CreateAsyncTask(o =>
-            {
-                Console.WriteLine(o);
-                return Task.FromResult(Unit.Default);
-            });
-        }
-
-        private static double GetMovementStepSize(GraphNode node)
-        {
-            return Math.Sqrt(node.Velocity.X * node.Velocity.X + node.Velocity.Y * node.Velocity.Y);
-        }
-
-        private Point AttractionForce(Point node1, Point node2)
-        {
-            double dx = node1.X - node2.X, dy = node1.Y - node2.Y;
-            var sqDist = dx * dx + dy * dy;
-            var d = Math.Sqrt(sqDist);
-            var mag = -m_SettingsManager.Settings.AttractionStrength * 0.001 * Math.Pow(d, 1.20);
-
-            return new Point(mag * (dx / d), mag * (dy / d));
-        }
-
-        private void CalculateEdges(GraphNode[] nodes)
-        {
-            foreach (var node in nodes)
-            {
-                foreach (var otherNode in nodes.Where(on => node.Package.Dependencies.ToArray().Contains(on.Package.Id)))
-                {
-                    var matchingEdge = GraphEdges.SingleOrDefault(edge => (edge.Node1 == node && edge.Node2 == otherNode));
-                    if (matchingEdge == null)
-                    {
-                        matchingEdge = new GraphEdge(node, otherNode);
-                        GraphEdges.Add(matchingEdge);
-                    }
-
-                    matchingEdge.StartPoint = node.Position;
-                    matchingEdge.EndPoint = otherNode.Position;
-                    matchingEdge.Selected = node.Selected || otherNode.Selected;
-                }
-            }
-
-            RemoveOrphanedEdges();
-        }
-
-        private void CalculatePositions()
-        {
-            var nodes = GraphNodes.ToArray();
-
-            try
-            {
-                CalculateRelativePosition(nodes);
-                CalculateEdges(nodes);
-            }
-            catch (Exception ex)
-            {
-                s_Logger.ErrorFormat("Error while calculating graph: {0}", ex);
-            }
-        }
-
-        private void CalculateRelativePosition(GraphNode[] nodes)
-        {
-            foreach (var node in nodes)
-            {
-                if (node.LockedForMove || node.Locked)
-                    continue;
-
-                var f = new Point(0, 0); // Force
-                //compute the repulsion on this node, with respect to ALL nodes
-                foreach (var coulomb in nodes.Where(otherNode => node != otherNode)
-                    .Select(otherNode => RepulsionForce(node.Position, otherNode.Position)))
-                {
-                    f.X += coulomb.X;
-                    f.Y += coulomb.Y;
-                }
-
-                //compute the attraction on this node, only to the adjacent nodes
-                foreach (var child in GraphEdges.Where(edge => edge.IsNodeContainedInEdge(node)).Select(edge => edge.GetOtherNode(node)))
-                {
-                    var hooke = AttractionForce(node.Position, child.Position);
-                    f.X += hooke.X;
-                    f.Y += hooke.Y;
-                }
-
-                var v = node.Velocity;
-
-                var dampingFactor = (m_SettingsManager.Settings.Damping - ((m_SettingsManager.Settings.Damping * (1 - node.WeightFactor)) / 16));
-                node.Velocity = new Point(
-                    (v.X + m_SettingsManager.Settings.TimeStep * f.X) * dampingFactor,
-                    (v.Y + m_SettingsManager.Settings.TimeStep * f.Y) * dampingFactor);
-
-                if (GetMovementStepSize(node) > 1)
-                {
-                    var newX = (int)(node.Position.X + m_SettingsManager.Settings.TimeStep * node.Velocity.X).AtLeast(0);
-                    var newY = (int)(node.Position.Y + m_SettingsManager.Settings.TimeStep * node.Velocity.Y).AtLeast(0);
-
-                    node.Position = new Point(newX, newY);
-                }
-            }
         }
 
         private void FillVersions()
@@ -262,18 +139,6 @@ namespace NuPendency.Gui.ViewModels
             {
                 GraphEdges.Remove(edge);
             }
-        }
-
-        private Point RepulsionForce(Point node1, Point node2)
-        {
-            double dx = node1.X - node2.X, dy = node1.Y - node2.Y;
-            var sqDist = dx * dx + dy * dy;
-            var d = Math.Sqrt(sqDist);
-            var repulsion = m_SettingsManager.Settings.RepulsionStrength * 1.0 / sqDist;
-            repulsion += -m_SettingsManager.Settings.RepulsionStrength * 0.00000006 * d;
-            //clip the repulsion
-            if (repulsion > m_SettingsManager.Settings.RepulsionClipping) repulsion = m_SettingsManager.Settings.RepulsionClipping;
-            return new Point(repulsion * (dx / d), repulsion * (dy / d));
         }
 
         private void TryUpdateNodeLevel()
