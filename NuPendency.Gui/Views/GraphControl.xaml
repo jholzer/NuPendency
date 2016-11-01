@@ -21,9 +21,9 @@
         <converters:NegativeIntConverter x:Key="NegativeIntConverter" />
         <converters:PackageTypeToVisibilityConverter MatchingType="{x:Type model:MissingNuGetPackage}" MatchVisibility="Visible" NoMatchVisibility="Collapsed" x:Key="VisibleIfMissingPackageConverter" />
     </UserControl.Resources>
-
     <Grid>
-        <ItemsControl ItemsSource="{Binding GraphNodes}" Canvas.ZIndex="0" Name="nodesPanel" Margin="10"
+        <ItemsControl ItemsSource="{Binding GraphNodes, RelativeSource={RelativeSource AncestorType=UserControl}}" Canvas.ZIndex="0" Name="nodesPanel" Margin="10"
+                      ItemTemplateSelector="{Binding DataTemplateSelector, RelativeSource={RelativeSource AncestorType=UserControl}}"
                       PreviewMouseUp="OnPreviewMouseUp"
                       MouseUp="OnPreviewMouseUp"
                       MouseMove="OnMouseMove">
@@ -34,41 +34,18 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemContainerStyle>
                 <Style TargetType="ContentPresenter">
+
                     <Setter Property="Canvas.Left" Value="{Binding Path=Position.X}" />
                     <Setter Property="Canvas.Top" Value="{Binding Path=Position.Y}" />
                     <Setter Property="Canvas.ZIndex" Value="{Binding Path=Package.Depth, Converter={StaticResource NegativeIntConverter}}" />
+
+                    <EventSetter Event="PreviewMouseDown" Handler="OnPreviewMouseDown" />
+                    <EventSetter Event="MouseLeave" Handler="OnMouseLeave" />
                 </Style>
             </ItemsControl.ItemContainerStyle>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="{x:Type viewModels:GraphNode}">
-                    <Border MinWidth="100"
-                                BorderThickness="{Binding Package, Converter={StaticResource PackageTypeToBorderThicknessConverter}}"
-                                CornerRadius="5" BorderBrush="Black"
-                                Opacity="{Binding Package.Depth, Converter={StaticResource PackageDepthToOpacityConverter}}"
-                                Background="{Binding Selected, Converter={StaticResource SelectionToColorConverter}}"
-                                PreviewMouseDown="OnPreviewMouseDown"
-                                MouseLeave="OnMouseLeave">
-                        <Border.Effect>
-                            <DropShadowEffect Opacity="0.5" />
-                        </Border.Effect>
-                        <StackPanel Orientation="Horizontal">
-                            <StackPanel Orientation="Vertical">
-                                <Label Content="{Binding Package.PackageId}" Margin="0,0,0,-5" />
-                                <Label Content="{Binding Package.VersionInfo}" Margin="0,-5,0,-5" />
-                                <StackPanel Orientation="Horizontal" Margin="0,-5,0,0">
-                                    <Label Content="Level:" />
-                                    <Label Content="{Binding Package.Depth}" />
-                                </StackPanel>
-                            </StackPanel>
-
-                            <fa:ImageAwesome Icon="Question" Height="32" Width="32" Visibility="{Binding Package, Converter={StaticResource VisibleIfMissingPackageConverter}}" />
-                        </StackPanel>
-                    </Border>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <ItemsControl ItemsSource="{Binding GraphEdges}" Canvas.ZIndex="-2">
+        <ItemsControl ItemsSource="{Binding GraphEdges, RelativeSource={RelativeSource AncestorType=UserControl}}" Canvas.ZIndex="-2">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Canvas />

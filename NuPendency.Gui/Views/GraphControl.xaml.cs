@@ -24,8 +24,11 @@ namespace NuPendency.Gui.Views
         public static readonly DependencyProperty DampingProperty = DependencyProperty.Register(
             "Damping", typeof(double), typeof(GraphControl), new PropertyMetadata(default(double)));
 
+        public static readonly DependencyProperty DataTemplateSelectorProperty = DependencyProperty.Register(
+            "DataTemplateSelector", typeof(DataTemplateSelector), typeof(GraphControl), new PropertyMetadata(default(DataTemplateSelector)));
+
         public static readonly DependencyProperty GraphEdgesProperty = DependencyProperty.Register(
-            "GraphEdges", typeof(ObservableCollectionExtended<GraphEdge>), typeof(GraphControl), new PropertyMetadata(default(ObservableCollectionExtended<GraphEdge>)));
+                    "GraphEdges", typeof(ObservableCollectionExtended<GraphEdge>), typeof(GraphControl), new PropertyMetadata(default(ObservableCollectionExtended<GraphEdge>)));
 
         public static readonly DependencyProperty GraphNodesProperty = DependencyProperty.Register(
                                     "GraphNodes", typeof(ObservableCollectionExtended<GraphNode>), typeof(GraphControl), new PropertyMetadata(default(ObservableCollectionExtended<GraphNode>)));
@@ -42,8 +45,11 @@ namespace NuPendency.Gui.Views
         private static readonly ILog s_Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly CompositeDisposable m_Disposables = new CompositeDisposable();
+
         private bool m_IsDragging;
+
         private GraphNode m_NodeBeingDragged;
+
         private Point m_OffsetWithinNode;
 
         public GraphControl()
@@ -66,6 +72,12 @@ namespace NuPendency.Gui.Views
         {
             get { return (double)GetValue(DampingProperty); }
             set { SetValue(DampingProperty, value); }
+        }
+
+        public DataTemplateSelector DataTemplateSelector
+        {
+            get { return (DataTemplateSelector)GetValue(DataTemplateSelectorProperty); }
+            set { SetValue(DataTemplateSelectorProperty, value); }
         }
 
         public ObservableCollectionExtended<GraphEdge> GraphEdges
@@ -105,7 +117,7 @@ namespace NuPendency.Gui.Views
 
         private static void DeSelectAllNodes(GraphViewModel graphViewModel)
         {
-            foreach (var node in graphViewModel.GraphNodes)
+            foreach (var node in graphViewModel.Nodes)
                 node.Selected = false;
         }
 
@@ -187,6 +199,9 @@ namespace NuPendency.Gui.Views
 
         private void CalculatePositions()
         {
+            if (GraphNodes == null)
+                return;
+
             var nodes = GraphNodes.ToArray();
 
             try
@@ -226,7 +241,7 @@ namespace NuPendency.Gui.Views
         {
             DeSelectAllNodes(DataContext as GraphViewModel);
 
-            var frameworkElement = sender as Border;
+            var frameworkElement = sender as ContentPresenter;
             if (frameworkElement == null)
                 return;
 

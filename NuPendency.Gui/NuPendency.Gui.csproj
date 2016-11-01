@@ -162,6 +162,7 @@
     <Compile Include="Converters\PackageTypeToVisibilityConverter.cs" />
     <Compile Include="Converters\SelectionToColorConverter.cs" />
     <Compile Include="Converters\SelectionToLineColorConverter.cs" />
+    <Compile Include="DataTemplate\GraphNodeTemplateSelector.cs" />
     <Compile Include="Design\DesignData.cs" />
     <Compile Include="Design\DesignGraphHandler.cs" />
     <Compile Include="Design\DesignSettingsManager.cs" />

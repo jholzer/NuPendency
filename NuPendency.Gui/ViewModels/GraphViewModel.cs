@@ -56,12 +56,12 @@ namespace NuPendency.Gui.ViewModels
 
         public ReactiveCommand<Unit> CmdPreviewMouseDown { get; set; }
         public ReactiveCommand<Unit> CmdPreviewMouseUp { get; set; }
-        public ObservableCollectionExtended<GraphEdge> GraphEdges { get; } = new ObservableCollectionExtended<GraphEdge>();
+        public ObservableCollectionExtended<GraphEdge> Edges { get; } = new ObservableCollectionExtended<GraphEdge>();
         public IGraphHandler GraphHandler { get; }
-        public ObservableCollectionExtended<GraphNode> GraphNodes { get; } = new ObservableCollectionExtended<GraphNode>();
         public bool IsActive => m_IsActiveHelper.Value;
         public string Name => ResolutionResult.RootPackageName;
         public int NodeCount => m_NodeCountHelper.Value;
+        public ObservableCollectionExtended<GraphNode> Nodes { get; } = new ObservableCollectionExtended<GraphNode>();
         public ResolutionResult ResolutionResult => GraphHandler.Result;
 
         public Version SelectedVersion
@@ -116,7 +116,7 @@ namespace NuPendency.Gui.ViewModels
                 .Transform(CreateDataNode)
                 .DisposeMany()
                 .ObserveOnDispatcher()
-                .Bind(GraphNodes)
+                .Bind(Nodes)
                 .Do(_ => TryUpdateNodeLevel())
                 .Do(_ => RemoveOrphanedEdges())
                 .Subscribe()
@@ -134,10 +134,10 @@ namespace NuPendency.Gui.ViewModels
 
         private void RemoveOrphanedEdges()
         {
-            var removeEdges = GraphEdges.Where(edge => !GraphNodes.Contains(edge.Node1) || !GraphNodes.Contains(edge.Node2)).ToArray();
+            var removeEdges = Edges.Where(edge => !Nodes.Contains(edge.Node1) || !Nodes.Contains(edge.Node2)).ToArray();
             foreach (var edge in removeEdges)
             {
-                GraphEdges.Remove(edge);
+                Edges.Remove(edge);
             }
         }
 
@@ -155,7 +155,7 @@ namespace NuPendency.Gui.ViewModels
 
         private void UpdateNodeLevel()
         {
-            var graphNodes = GraphNodes.ToArray();
+            var graphNodes = Nodes.ToArray();
             foreach (var graphNode in graphNodes)
             {
                 graphNode.ReferencedByCount = graphNodes.SelectMany(node => node.Package.Dependencies.ToArray()).Count(dep => dep == graphNode.Package.Id);
