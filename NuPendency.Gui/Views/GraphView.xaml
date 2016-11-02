@@ -6,46 +6,14 @@
              xmlns:viewModels="clr-namespace:NuPendency.Gui.ViewModels"
              xmlns:views="clr-namespace:NuPendency.Gui.Views"
              xmlns:dataTemplate="clr-namespace:NuPendency.Gui.DataTemplate"
-             xmlns:converters="clr-namespace:NuPendency.Gui.Converters"
-             xmlns:model="clr-namespace:NuPendency.Interfaces.Model;assembly=NuPendency.Interfaces"
-             xmlns:fa="http://schemas.fontawesome.io/icons/"
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance viewModels:DesignGraphViewModel, IsDesignTimeCreatable=True}">
 
     <UserControl.Resources>
 
-        <converters:AddArbitraryConverter x:Key="AddArbitraryConverterHorizontal" Arbitrary="50" />
-        <converters:AddArbitraryConverter x:Key="AddArbitraryConverterVertical" Arbitrary="50" />
-        <converters:PackageTypeToBorderThicknessConverter x:Key="PackageTypeToBorderThicknessConverter" BorderThicknessNormalValue="1" BorderThicknessRootValue="3" />
-        <converters:PackageDepthToOpacityConverter x:Key="PackageDepthToOpacityConverter" Step="0.075" />
-        <converters:SelectionToColorConverter x:Key="SelectionToColorConverter" />
-        <converters:SelectionToLineColorConverter x:Key="SelectionToLineColorConverter" />
-        <converters:NegativeIntConverter x:Key="NegativeIntConverter" />
-        <converters:PackageTypeToVisibilityConverter MatchingType="{x:Type model:MissingNuGetPackage}" MatchVisibility="Visible" NoMatchVisibility="Collapsed" x:Key="VisibleIfMissingPackageConverter" />
-
         <DataTemplate x:Key="GraphNodeTemplate" DataType="{x:Type viewModels:GraphNode}">
-            <Border MinWidth="100"
-                                BorderThickness="{Binding Package, Converter={StaticResource PackageTypeToBorderThicknessConverter}}"
-                                CornerRadius="5" BorderBrush="Black"
-                                Opacity="{Binding Package.Depth, Converter={StaticResource PackageDepthToOpacityConverter}}"
-                                Background="{Binding Selected, Converter={StaticResource SelectionToColorConverter}}">
-                <Border.Effect>
-                    <DropShadowEffect Opacity="0.5" />
-                </Border.Effect>
-                <StackPanel Orientation="Horizontal">
-                    <StackPanel Orientation="Vertical">
-                        <Label Content="{Binding Package.PackageId}" Margin="0,0,0,-5" />
-                        <Label Content="{Binding Package.VersionInfo}" Margin="0,-5,0,-5" />
-                        <StackPanel Orientation="Horizontal" Margin="0,-5,0,0">
-                            <Label Content="Level:" />
-                            <Label Content="{Binding Package.Depth}" />
-                        </StackPanel>
-                    </StackPanel>
-
-                    <fa:ImageAwesome Icon="Question" Height="32" Width="32" Visibility="{Binding Package, Converter={StaticResource VisibleIfMissingPackageConverter}}" />
-                </StackPanel>
-            </Border>
+            <views:DefaultGraphNodeControl />
         </DataTemplate>
 
         <dataTemplate:GraphNodeTemplateSelector DefaultDataTemplate="{StaticResource GraphNodeTemplate}" x:Key="GraphNodeTemplateSelector" />

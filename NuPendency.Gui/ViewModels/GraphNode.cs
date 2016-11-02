@@ -6,9 +6,21 @@ namespace NuPendency.Gui.ViewModels
 {
     public class GraphNode : BaseObject
     {
+        private bool m_Locked;
         private Point m_Position;
         private bool m_Selected;
-        public bool Locked { get; set; }
+
+        public bool Locked
+        {
+            get { return m_Locked; }
+            set
+            {
+                if (m_Locked == value) return;
+                m_Locked = value;
+                RaisePropertyChanged();
+            }
+        }
+
         public bool LockedForMove { get; set; }
         public NuGetPackage Package { get; set; }
 

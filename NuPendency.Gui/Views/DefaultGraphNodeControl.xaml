@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="NuPendency.Gui.Views.DefaultGraphNodeControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
+             xmlns:design="clr-namespace:NuPendency.Gui.Design"
+             xmlns:converters="clr-namespace:NuPendency.Gui.Converters"
+             xmlns:model="clr-namespace:NuPendency.Interfaces.Model;assembly=NuPendency.Interfaces"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance design:DesignDefaultGraphNode, IsDesignTimeCreatable=True}">
+    <UserControl.Resources>
+        <converters:PackageTypeToBorderThicknessConverter x:Key="PackageTypeToBorderThicknessConverter" BorderThicknessNormalValue="1" BorderThicknessRootValue="3" />
+        <converters:PackageDepthToOpacityConverter x:Key="PackageDepthToOpacityConverter" Step="0.075" />
+        <converters:SelectionToColorConverter x:Key="SelectionToColorConverter" />
+        <converters:BoolToVisibilityConverter x:Key="VisibleIfTrueConverter" FalseValue="Collapsed" TrueValue="Visible" />
+        <converters:PackageTypeToVisibilityConverter MatchingType="{x:Type model:MissingNuGetPackage}" MatchVisibility="Visible" NoMatchVisibility="Collapsed" x:Key="VisibleIfMissingPackageConverter" />
+    </UserControl.Resources>
+    <Border MinWidth="100" BorderThickness="{Binding Package, Converter={StaticResource PackageTypeToBorderThicknessConverter}}"
+            CornerRadius="5" BorderBrush="Black"
+            Opacity="{Binding Package.Depth, Converter={StaticResource PackageDepthToOpacityConverter}}"
+            Background="{Binding Selected, Converter={StaticResource SelectionToColorConverter}}">
+        <Border.Effect>
+            <DropShadowEffect Opacity="0.5" />
+        </Border.Effect>
+
+        <Grid>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Label Content="{Binding Package.PackageId}" Margin="0,0,0,-5" Grid.Column="0" Grid.Row="0" />
+            <Label Content="{Binding Package.VersionInfo}" Margin="0,-5,0,-5" Grid.Column="0" Grid.Row="1" />
+            <StackPanel Orientation="Horizontal" Margin="0,-5,0,0" Grid.Column="0" Grid.Row="2">
+                <Label Content="Level:" />
+                <Label Content="{Binding Package.Depth}" />
+            </StackPanel>
+
+            <fa:ImageAwesome Icon="Lock" Grid.Column="2" Grid.Row="0" Height="14" HorizontalAlignment="Right" Visibility="{Binding Locked, Converter={StaticResource VisibleIfTrueConverter}}" />
+            <fa:ImageAwesome Icon="Question" Height="32" Width="32" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2"
+                             Visibility="{Binding Package, Converter={StaticResource VisibleIfMissingPackageConverter}}" />
+        </Grid>
+    </Border>
+</UserControl>
