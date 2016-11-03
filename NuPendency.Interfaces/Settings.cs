@@ -17,6 +17,7 @@ namespace NuPendency.Interfaces
 
         private ObservableCollection<string> m_ExcludedPackages;
 
+        private bool m_HighlightReferencingPackages;
         private int m_MaxSearchDepth;
 
         private ObservableCollection<string> m_Repositories;
@@ -36,6 +37,7 @@ namespace NuPendency.Interfaces
             TimeStep = 0.95;
 
             MaxSearchDepth = 4;
+            HighlightReferencingPackages = true;
         }
 
         [Category("Graph settings")]
@@ -83,6 +85,21 @@ namespace NuPendency.Interfaces
             }
         }
 
+        [Category("Display")]
+        [DisplayName("Highlight referencing packages")]
+        public bool HighlightReferencingPackages
+        {
+            get { return m_HighlightReferencingPackages; }
+            set
+            {
+                if (m_HighlightReferencingPackages == value) return;
+                m_HighlightReferencingPackages = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        [Category("Search")]
+        [DisplayName("Maximum search depth")]
         public int MaxSearchDepth
         {
             get { return m_MaxSearchDepth; }

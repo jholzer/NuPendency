@@ -9,6 +9,7 @@
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         xmlns:converters1="clr-namespace:NuPendency.Gui.Converters"
         xmlns:ui="clr-namespace:NuPendency.Commons.Ui;assembly=NuPendency.Commons"
+        xmlns:Properties="clr-namespace:NuPendency.Gui.Properties"
         mc:Ignorable="d"
         DataContext="{Binding MainWindowViewModel, Source={StaticResource Locator}}"
         d:DesignHeight="600" d:DesignWidth="1024"
@@ -89,7 +90,7 @@
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
 
-                                <Label Content="{Binding Name}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" FontWeight="Bold" VerticalAlignment="Center" />
+                                <Label Content="{x:Static Properties:Resources.Repositories}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" FontWeight="Bold" VerticalAlignment="Center" />
 
                                 <ComboBox ItemsSource="{Binding AllFoundRootVersions}" SelectedItem="{Binding SelectedVersion, Mode=TwoWay}" Width="100" Margin="3,0.2,3,0"
                                           Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" VerticalAlignment="Center"
@@ -121,15 +122,15 @@
                     </ListView.ItemTemplate>
                 </ListView>
 
-                <Expander Grid.Row="2" Grid.Column="0" Header="Repositories">
+                <Expander Grid.Row="2" Grid.Column="0" Header="{x:Static Properties:Resources.Repositories}">
                     <views:StringCollectionEditorView  DataContext="{Binding RepositoryEditorViewModel}" />
                 </Expander>
 
-                <Expander Grid.Row="3" Grid.Column="0" Header="Excluded packages">
+                <Expander Grid.Row="3" Grid.Column="0" Header="{x:Static Properties:Resources.ExcludedPackages}">
                     <views:StringCollectionEditorView DataContext="{Binding ExclusionsEditorViewModel}" />
                 </Expander>
 
-                <Expander Grid.Row="4" Grid.Column="0" Header="Settings">
+                <Expander Grid.Row="4" Grid.Column="0" Header="{x:Static Properties:Resources.Settings}">
                     <xctk:PropertyGrid SelectedObject="{Binding Settings}" ShowSearchBox="False" ShowSortOptions="False" ShowSummary="False" ShowTitle="False" />
                 </Expander>
 

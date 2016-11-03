@@ -7,16 +7,17 @@
              xmlns:design="clr-namespace:NuPendency.Gui.Design"
              xmlns:converters="clr-namespace:NuPendency.Gui.Converters"
              xmlns:model="clr-namespace:NuPendency.Interfaces.Model;assembly=NuPendency.Interfaces"
+             xmlns:Properties="clr-namespace:NuPendency.Gui.Properties"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance design:DesignDefaultGraphNode, IsDesignTimeCreatable=True}">
     <UserControl.Resources>
         <converters:PackageTypeToBorderThicknessConverter x:Key="PackageTypeToBorderThicknessConverter" BorderThicknessNormalValue="1" BorderThicknessRootValue="3" />
         <converters:PackageDepthToOpacityConverter x:Key="PackageDepthToOpacityConverter" Step="0.075" />
         <converters:SelectionToColorConverter x:Key="SelectionToColorConverter" />
-        <converters:BoolToVisibilityConverter x:Key="VisibleIfTrueConverter" FalseValue="Collapsed" TrueValue="Visible" />
+        <converters:BoolToVisibilityConverter x:Key="VisibleIfTrueElseHiddenConverter" FalseValue="Hidden" TrueValue="Visible" />
         <converters:PackageTypeToVisibilityConverter MatchingType="{x:Type model:MissingNuGetPackage}" MatchVisibility="Visible" NoMatchVisibility="Collapsed" x:Key="VisibleIfMissingPackageConverter" />
     </UserControl.Resources>
-    <Border MinWidth="100" BorderThickness="{Binding Package, Converter={StaticResource PackageTypeToBorderThicknessConverter}}"
+    <Border BorderThickness="{Binding Package, Converter={StaticResource PackageTypeToBorderThicknessConverter}}"
             CornerRadius="5" BorderBrush="Black"
             Opacity="{Binding Package.Depth, Converter={StaticResource PackageDepthToOpacityConverter}}"
             Background="{Binding Selected, Converter={StaticResource SelectionToColorConverter}}">
@@ -44,7 +45,9 @@
                 <Label Content="{Binding Package.Depth}" />
             </StackPanel>
 
-            <fa:ImageAwesome Icon="Lock" Grid.Column="2" Grid.Row="0" Height="14" HorizontalAlignment="Right" Visibility="{Binding Locked, Converter={StaticResource VisibleIfTrueConverter}}" />
+            <fa:ImageAwesome Icon="Lock" Grid.Column="2" Grid.Row="0" Height="14" HorizontalAlignment="Right" Margin="3"
+                             Visibility="{Binding Locked, Converter={StaticResource VisibleIfTrueElseHiddenConverter}}"
+                             ToolTip="{x:Static Properties:Resources.DoubleClicktoUnlock}" />
             <fa:ImageAwesome Icon="Question" Height="32" Width="32" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2"
                              Visibility="{Binding Package, Converter={StaticResource VisibleIfMissingPackageConverter}}" />
         </Grid>

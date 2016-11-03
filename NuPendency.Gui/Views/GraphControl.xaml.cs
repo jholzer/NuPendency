@@ -3,6 +3,7 @@ using log4net;
 using NuPendency.Commons.Extensions;
 using NuPendency.Gui.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -10,6 +11,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using SelectionMode = NuPendency.Gui.ViewModels.SelectionMode;
 
 namespace NuPendency.Gui.Views
 {
@@ -32,6 +34,12 @@ namespace NuPendency.Gui.Views
 
         public static readonly DependencyProperty GraphNodesProperty = DependencyProperty.Register(
                                     "GraphNodes", typeof(ObservableCollectionExtended<GraphNode>), typeof(GraphControl), new PropertyMetadata(default(ObservableCollectionExtended<GraphNode>)));
+
+        public static readonly DependencyProperty HighlightReferencingPackagesProperty = DependencyProperty.Register(
+                                                    "HighlightReferencingPackages",
+                                                    typeof(bool),
+                                                    typeof(GraphControl),
+                                                    new PropertyMetadata(default(bool)));
 
         public static readonly DependencyProperty RepulsionClippingProperty = DependencyProperty.Register(
             "RepulsionClipping", typeof(double), typeof(GraphControl), new PropertyMetadata(default(double)));
@@ -92,6 +100,12 @@ namespace NuPendency.Gui.Views
             set { SetValue(GraphNodesProperty, value); }
         }
 
+        public bool HighlightReferencingPackages
+        {
+            get { return (bool)GetValue(HighlightReferencingPackagesProperty); }
+            set { SetValue(HighlightReferencingPackagesProperty, value); }
+        }
+
         public double RepulsionClipping
         {
             get { return (double)GetValue(RepulsionClippingProperty); }
@@ -118,7 +132,7 @@ namespace NuPendency.Gui.Views
         private static void DeSelectAllNodes(GraphViewModel graphViewModel)
         {
             foreach (var node in graphViewModel.Nodes)
-                node.Selected = false;
+                node.DeSelect();
         }
 
         private static double GetMovementStepSize(GraphNode node)
@@ -151,7 +165,7 @@ namespace NuPendency.Gui.Views
 
                     matchingEdge.StartPoint = node.Position;
                     matchingEdge.EndPoint = otherNode.Position;
-                    matchingEdge.Selected = node.Selected || otherNode.Selected;
+                    matchingEdge.Selected = node.IsSelected() || otherNode.IsSelected();
                 }
             }
         }
@@ -215,6 +229,16 @@ namespace NuPendency.Gui.Views
             }
         }
 
+        private void HighlightToRootNode(GraphNode node)
+        {
+            var nodesToBeHightlighted = GraphEdges.Where(edge => edge.Node2 == node).Select(edge => edge.Node1).ToArray();
+            foreach (var highLightNode in nodesToBeHightlighted)
+            {
+                highLightNode.Highlight();
+                HighlightToRootNode(highLightNode);
+            }
+        }
+
         private void OnMouseLeave(object sender, MouseEventArgs e)
         {
             m_NodeBeingDragged = null;
@@ -249,7 +273,13 @@ namespace NuPendency.Gui.Views
             if (m_NodeBeingDragged == null)
                 return;
 
-            m_NodeBeingDragged.Selected = true;
+            m_NodeBeingDragged.Select();
+
+            if (HighlightReferencingPackages)
+            {
+                RemoveAllHighlights();
+                HighlightToRootNode(m_NodeBeingDragged);
+            }
 
             if (e.ClickCount == 2)
             {
@@ -270,6 +300,12 @@ namespace NuPendency.Gui.Views
                 return;
             m_NodeBeingDragged.LockedForMove = false;
             m_IsDragging = false;
+        }
+
+        private void RemoveAllHighlights()
+        {
+            foreach (var node in GraphNodes)
+                node.DeHighlight();
         }
 
         private Point RepulsionForce(Point node1, Point node2)

@@ -8,7 +8,7 @@ namespace NuPendency.Gui.ViewModels
     {
         private bool m_Locked;
         private Point m_Position;
-        private bool m_Selected;
+        private SelectionMode m_Selected;
 
         public bool Locked
         {
@@ -37,7 +37,7 @@ namespace NuPendency.Gui.ViewModels
 
         public int ReferencedByCount { get; set; }
 
-        public bool Selected
+        public SelectionMode Selected
         {
             get { return m_Selected; }
             set

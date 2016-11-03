@@ -179,9 +179,11 @@
     <Compile Include="ViewModels\GraphEdge.cs" />
     <Compile Include="ViewModels\GraphExtensions.cs" />
     <Compile Include="ViewModels\GraphNode.cs" />
+    <Compile Include="ViewModels\GraphNodeExtensions.cs" />
     <Compile Include="ViewModels\GraphNodeForceExtensions.cs" />
     <Compile Include="ViewModels\GraphViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\SelectionMode.cs" />
     <Compile Include="ViewModels\StringCollectionEditorViewModel.cs" />
     <Compile Include="Views\DefaultGraphNodeControl.xaml.cs">
       <DependentUpon>DefaultGraphNodeControl.xaml</DependentUpon>
@@ -241,7 +243,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>

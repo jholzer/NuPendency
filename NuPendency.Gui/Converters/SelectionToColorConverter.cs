@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NuPendency.Gui.ViewModels;
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
@@ -9,13 +10,17 @@ namespace NuPendency.Gui.Converters
 {
     public class SelectionToColorConverter : IValueConverter
     {
-
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is bool)
+            SelectionMode selectionMode = value as SelectionMode? ?? SelectionMode.NotSelected;
+            if (selectionMode == SelectionMode.Selected)
             {
-                bool selected = System.Convert.ToBoolean(value);
-                return selected ? Brushes.GreenYellow : Brushes.White;
+                return Brushes.GreenYellow;
+            }
+
+            if (selectionMode == SelectionMode.Highlighted)
+            {
+                return Brushes.Orange;
             }
             return Brushes.White;
         }
