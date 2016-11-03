@@ -35,8 +35,8 @@ namespace NuPendency.Gui.Views
         public static readonly DependencyProperty GraphNodesProperty = DependencyProperty.Register(
                                     "GraphNodes", typeof(ObservableCollectionExtended<GraphNode>), typeof(GraphControl), new PropertyMetadata(default(ObservableCollectionExtended<GraphNode>)));
 
-        public static readonly DependencyProperty HighlightReferencingPackagesProperty = DependencyProperty.Register(
-                                                    "HighlightReferencingPackages",
+        public static readonly DependencyProperty HighlightReferencingNodesProperty = DependencyProperty.Register(
+                                                    "HighlightReferencingNodes",
                                                     typeof(bool),
                                                     typeof(GraphControl),
                                                     new PropertyMetadata(default(bool)));
@@ -100,10 +100,10 @@ namespace NuPendency.Gui.Views
             set { SetValue(GraphNodesProperty, value); }
         }
 
-        public bool HighlightReferencingPackages
+        public bool HighlightReferencingNodes
         {
-            get { return (bool)GetValue(HighlightReferencingPackagesProperty); }
-            set { SetValue(HighlightReferencingPackagesProperty, value); }
+            get { return (bool)GetValue(HighlightReferencingNodesProperty); }
+            set { SetValue(HighlightReferencingNodesProperty, value); }
         }
 
         public double RepulsionClipping
@@ -275,7 +275,7 @@ namespace NuPendency.Gui.Views
 
             m_NodeBeingDragged.Select();
 
-            if (HighlightReferencingPackages)
+            if (HighlightReferencingNodes)
             {
                 RemoveAllHighlights();
                 HighlightToRootNode(m_NodeBeingDragged);

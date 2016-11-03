@@ -27,7 +27,7 @@
                             Damping="{Binding Settings.Damping}"
                             RepulsionClipping="{Binding Settings.RepulsionClipping}"
                             RepulsionStrength="{Binding Settings.RepulsionStrength}"
-                            HighlightReferencingPackages="{Binding Settings.HighlightReferencingPackages}"
+                            HighlightReferencingNodes="{Binding Settings.HighlightReferencingPackages}"
                             TimeStep="{Binding Settings.TimeStep}" />
     </Grid>
 </UserControl>
