@@ -1,6 +1,7 @@
 ﻿using Ninject.Modules;
 using NuPendency.Commons.Interfaces;
 using NuPendency.Commons.Model;
+using NuPendency.Core.Interfaces;
 using NuPendency.Core.Services;
 using NuPendency.Interfaces;
 using NuPendency.Interfaces.Services;
@@ -21,6 +22,13 @@ namespace NuPendency.Core
 
             Bind<ISettingsRootProvider<Settings>>().To<SettingsRootProvider>().InSingletonScope();
             Bind<ISettingsManager<Settings>>().To<SettingsManager<Settings>>().InSingletonScope();
+
+            #region internal
+
+            Bind<IResolutionFactory>().To<ResolutionFactory>();
+            Bind<INuGetResolutionEngine>().To<NuGetResolutionEngine>();
+
+            #endregion internal
         }
     }
 }
