@@ -26,10 +26,9 @@
 </CommandLineOptions>-->
   <Fragment>
     <ComponentGroup Id="NuPendency">
+      <ComponentRef Id="comp_1D2359C77DD24388A5CBFB936BDE56C9" />
       <ComponentRef Id="comp_25B38FEA25FB46EBA3AEDD4584456072" />
       <ComponentRef Id="comp_0FEBE7D90D3545539A07B29A584C1290" />
-      <ComponentRef Id="comp_DE2E5144118D46A5810E69DA7FBA803C" />
-      <ComponentRef Id="comp_246ABD7096D84A83AFF6574E99CEAAEE" />
       <ComponentRef Id="comp_BBF176B12A7642369ADB4FA312902393" />
       <ComponentRef Id="comp_6FF9D20A6AAA4554BC9743F0594A3A26" />
       <ComponentRef Id="comp_BB840B449DA845DE9EC6C6FB7B3375F3" />
@@ -88,17 +87,14 @@
       <ComponentRef Id="comp_3E255BBB3AA047CB9012A4B86FA0BD94" />
     </ComponentGroup>
     <DirectoryRef Id="INSTALLDIR">
+      <Component Id="comp_1D2359C77DD24388A5CBFB936BDE56C9" Guid="8075BD1E-2796-46B0-9EF2-FEF440366724">
+        <File Id="file_89F0FFDB47704CDFA499B871EE0D280E" Checksum="yes" KeyPath="yes" Source="$(var.SourcePath)\CWDev.SLNTools.Core.dll" />
+      </Component>
       <Component Id="comp_25B38FEA25FB46EBA3AEDD4584456072" Guid="4A6C72B7-24E9-4C33-9BDC-26E9D4FA2F7B">
         <File Id="file_32014B0EDB904B7EB9BE983534E46068" Checksum="yes" KeyPath="yes" Source="$(var.SourcePath)\DynamicData.dll" />
       </Component>
       <Component Id="comp_0FEBE7D90D3545539A07B29A584C1290" Guid="670F893D-0BC8-4753-B915-2D15867C8A88">
         <File Id="file_B62C0218E5404CB0BEE7275E764863E8" Checksum="yes" KeyPath="yes" Source="$(var.SourcePath)\FontAwesome.WPF.dll" />
-      </Component>
-      <Component Id="comp_DE2E5144118D46A5810E69DA7FBA803C" Guid="9CB0F7BE-15E1-4342-AC85-8166AD9199E7">
-        <File Id="file_D6AB4FBFC1754097B599121566174525" Checksum="yes" KeyPath="yes" Source="$(var.SourcePath)\FubuCore.dll" />
-      </Component>
-      <Component Id="comp_246ABD7096D84A83AFF6574E99CEAAEE" Guid="8442AB1A-BD09-4676-B248-BABCD51974C6">
-        <File Id="file_D344FE424A4B4721A05B160C24F26A80" Checksum="yes" KeyPath="yes" Source="$(var.SourcePath)\FubuCsProjFile.dll" />
       </Component>
       <Component Id="comp_BBF176B12A7642369ADB4FA312902393" Guid="DAB91057-D9D3-4AFB-ADAF-F74FD968C9E0">
         <File Id="file_38B3702EB2854E4CA832D5C4A0562864" Checksum="yes" KeyPath="yes" Source="$(var.SourcePath)\log4net.dll" />
