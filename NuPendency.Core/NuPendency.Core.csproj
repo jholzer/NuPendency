@@ -30,16 +30,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CWDev.SLNTools.Core, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SLNTools.Core.1.1.2.1\lib\net20\CWDev.SLNTools.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="DynamicData, Version=4.9.0.1189, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\DynamicData.4.9.0.1189\lib\net45\DynamicData.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="FubuCore, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FubuCore.1.0.0.225\lib\FubuCore.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="FubuCsProjFile, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FubuCsProjFile.1.9.0.229\lib\net40\FubuCsProjFile.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
@@ -109,9 +105,12 @@
     <Compile Include="Services\GraphHandler.cs" />
     <Compile Include="Services\GraphManager.cs" />
     <Compile Include="Services\NuGetResolutionEngine.cs" />
+    <Compile Include="Services\ProjectResolutionEngine.cs" />
     <Compile Include="Services\RepositoryService.cs" />
+    <Compile Include="Services\ResolutionFactory.cs" />
     <Compile Include="Services\RespotitoryManager.cs" />
     <Compile Include="Services\SearchWrapper.cs" />
+    <Compile Include="Services\SolutionResolutionEngine.cs" />
     <Compile Include="Services\VersionExtensions.cs" />
   </ItemGroup>
   <ItemGroup>

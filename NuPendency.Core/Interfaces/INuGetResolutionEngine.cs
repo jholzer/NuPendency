@@ -1,13 +1,21 @@
+using NuGet;
+using NuPendency.Interfaces.Model;
 using System.Collections.ObjectModel;
 using System.Runtime.Versioning;
 using System.Threading;
 using System.Threading.Tasks;
-using NuGet;
-using NuPendency.Interfaces.Model;
 
 namespace NuPendency.Core.Interfaces
 {
-    internal interface INuGetResolutionEngine
+    internal interface INuGetResolutionEngine : IResolutionEngine
+    {
+    }
+
+    internal interface IProjectResolutionEngine : IResolutionEngine
+    {
+    }
+
+    internal interface IResolutionEngine
     {
         Task<NuGetPackage> Resolve(ObservableCollection<NuGetPackage> packages,
             string packageId,
@@ -15,5 +23,9 @@ namespace NuPendency.Core.Interfaces
             CancellationToken token,
             FrameworkName targetFramework = null,
             IVersionSpec versionSpec = null);
+    }
+
+    internal interface ISolutionResolutionEngine : IResolutionEngine
+    {
     }
 }

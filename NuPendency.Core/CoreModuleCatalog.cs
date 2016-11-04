@@ -27,6 +27,8 @@ namespace NuPendency.Core
 
             Bind<IResolutionFactory>().To<ResolutionFactory>();
             Bind<INuGetResolutionEngine>().To<NuGetResolutionEngine>();
+            Bind<ISolutionResolutionEngine>().To<SolutionResolutionEngine>();
+            Bind<IProjectResolutionEngine>().To<ProjectResolutionEngine>();
 
             #endregion internal
         }

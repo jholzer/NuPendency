@@ -1,5 +1,4 @@
-﻿using NuPendency.Gui.ViewModels;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace NuPendency.Gui.DataTemplate

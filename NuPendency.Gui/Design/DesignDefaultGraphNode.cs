@@ -1,7 +1,6 @@
 ﻿using NuGet;
 using NuPendency.Gui.ViewModels;
 using NuPendency.Interfaces.Model;
-using System;
 
 namespace NuPendency.Gui.Design
 {

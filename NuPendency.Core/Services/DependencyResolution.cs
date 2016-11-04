@@ -1,6 +1,4 @@
-using Ninject.Parameters;
 using NuGet;
-using NuPendency.Commons.Interfaces;
 using NuPendency.Core.Interfaces;
 using NuPendency.Interfaces.Model;
 using NuPendency.Interfaces.Services;
@@ -80,7 +78,8 @@ namespace NuPendency.Core.Services
             IVersionSpec versionSpec = null)
         {
             var resolutionEngine = m_ResolutionFactory.GetResolutionEngine(packageName);
-            return resolutionEngine.Resolve(packages, packageName, depth, cancellationToken, targetFramework,
+
+            return resolutionEngine?.Resolve(packages, packageName, depth, cancellationToken, targetFramework,
                 versionSpec);
         }
 
@@ -88,21 +87,6 @@ namespace NuPendency.Core.Services
         {
             m_Active.OnNext(true);
             return Disposable.Create(() => m_Active.OnNext(false));
-        }
-    }
-
-    internal class ResolutionFactory : IResolutionFactory
-    {
-        private readonly IInstanceCreator m_InstanceCreator;
-
-        public ResolutionFactory(IInstanceCreator instanceCreator)
-        {
-            m_InstanceCreator = instanceCreator;
-        }
-
-        public INuGetResolutionEngine GetResolutionEngine(string package)
-        {
-            return m_InstanceCreator.CreateInstance<INuGetResolutionEngine>(new ConstructorArgument[] { });
         }
     }
 }

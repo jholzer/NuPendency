@@ -16,12 +16,14 @@ namespace NuPendency.Core.Services
     internal class NuGetResolutionEngine : INuGetResolutionEngine
     {
         private readonly IRepositoryService m_RepositoryService;
+        private readonly IResolutionFactory m_ResolutionFactory;
         private readonly ISettingsManager<Settings> m_SettingsManager;
 
-        public NuGetResolutionEngine(IRepositoryService repositoryService, ISettingsManager<Settings> settingsManager)
+        public NuGetResolutionEngine(IRepositoryService repositoryService, ISettingsManager<Settings> settingsManager, IResolutionFactory resolutionFactory)
         {
             m_RepositoryService = repositoryService;
             m_SettingsManager = settingsManager;
+            m_ResolutionFactory = resolutionFactory;
         }
 
         public async Task<NuGetPackage> Resolve(ObservableCollection<NuGetPackage> packages,
@@ -53,7 +55,11 @@ namespace NuPendency.Core.Services
             {
                 foreach (var dependency in dependencySet.Dependencies)
                 {
-                    var dependingPackage = await Resolve(packages, dependency.Id, depth + 1, token, targetFramework, dependency.VersionSpec) ??
+                    var resolutionEngine = m_ResolutionFactory.GetResolutionEngine(dependency.Id);
+                    if (resolutionEngine == null)
+                        continue;
+
+                    var dependingPackage = await resolutionEngine.Resolve(packages, dependency.Id, depth + 1, token, targetFramework, dependency.VersionSpec) ??
                                            new MissingNuGetPackage(dependency.Id);
                     package.Dependencies.Add(dependingPackage.Id);
 
