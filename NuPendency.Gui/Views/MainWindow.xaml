@@ -90,7 +90,7 @@
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
 
-                                <Label Content="{x:Static Properties:Resources.Repositories}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" FontWeight="Bold" VerticalAlignment="Center" />
+                                <Label Content="{Binding Name}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" FontWeight="Bold" VerticalAlignment="Center" />
 
                                 <ComboBox ItemsSource="{Binding AllFoundRootVersions}" SelectedItem="{Binding SelectedVersion, Mode=TwoWay}" Width="100" Margin="3,0.2,3,0"
                                           Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" VerticalAlignment="Center"

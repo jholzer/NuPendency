@@ -89,7 +89,7 @@ namespace NuPendency.Gui.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die {Binding Name} ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Repositories ähnelt.
         /// </summary>
         public static string Repositories {
             get {

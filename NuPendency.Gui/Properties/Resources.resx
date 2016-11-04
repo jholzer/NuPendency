@@ -125,7 +125,7 @@
     <value>Doubleclick to unlock</value>
   </data>
   <data name="Repositories" xml:space="preserve">
-    <value>{Binding Name}</value>
+    <value>Repositories</value>
   </data>
   <data name="ExcludedPackages" xml:space="preserve">
     <value>Excluded packages</value>
