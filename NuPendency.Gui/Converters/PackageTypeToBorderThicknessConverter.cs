@@ -1,18 +1,20 @@
-﻿using System;
+﻿using NuPendency.Interfaces.Model;
+using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using NuPendency.Interfaces.Model;
 
 namespace NuPendency.Gui.Converters
 {
     public class PackageTypeToBorderThicknessConverter : IValueConverter
     {
-        public int BorderThicknessRootValue { get; set; } = 2;
         public int BorderThicknessNormalValue { get; set; } = 1;
+        public int BorderThicknessRootValue { get; set; } = 2;
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is RootNuGetPackage)
+            var pack = value as PackageBase;
+            if ((pack != null) && (pack.Depth == 0))
                 return BorderThicknessRootValue;
             return BorderThicknessNormalValue;
         }

@@ -6,6 +6,7 @@
              xmlns:viewModels="clr-namespace:NuPendency.Gui.ViewModels"
              xmlns:views="clr-namespace:NuPendency.Gui.Views"
              xmlns:dataTemplate="clr-namespace:NuPendency.Gui.DataTemplate"
+             xmlns:nodes="clr-namespace:NuPendency.Gui.Views.Nodes"
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance viewModels:DesignGraphViewModel, IsDesignTimeCreatable=True}">
@@ -13,10 +14,19 @@
     <UserControl.Resources>
 
         <DataTemplate x:Key="GraphNodeTemplate" DataType="{x:Type viewModels:GraphNode}">
-            <views:DefaultGraphNodeControl />
+            <nodes:DefaultGraphNodeControl />
+        </DataTemplate>
+        <DataTemplate x:Key="SolutionNodeTemplate" DataType="{x:Type viewModels:GraphNode}">
+            <nodes:SolutionNodeControl />
+        </DataTemplate>
+        <DataTemplate x:Key="ProjectNodeTemplate" DataType="{x:Type viewModels:GraphNode}">
+            <nodes:ProjectNodeControl />
         </DataTemplate>
 
-        <dataTemplate:GraphNodeTemplateSelector DefaultDataTemplate="{StaticResource GraphNodeTemplate}" x:Key="GraphNodeTemplateSelector" />
+        <dataTemplate:GraphNodeTemplateSelector DefaultDataTemplate="{StaticResource GraphNodeTemplate}"
+                                                SolutionDataTemplate="{StaticResource SolutionNodeTemplate}"
+                                                ProjectDataTemplate="{StaticResource ProjectNodeTemplate}"
+                                                x:Key="GraphNodeTemplateSelector" />
     </UserControl.Resources>
 
     <Grid>

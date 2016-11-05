@@ -1,9 +1,7 @@
-﻿using DynamicData;
-using NuGet;
+﻿using NuGet;
 using NuPendency.Interfaces.Model;
 using System;
 using System.Linq;
-using System.Net.NetworkInformation;
 
 namespace NuPendency.Gui.Design
 {
@@ -11,8 +9,8 @@ namespace NuPendency.Gui.Design
     {
         public static NuGetPackage GetNuGetPackage(int nr = 0)
         {
-            string packName = string.Format("Package{0}", nr);
-            return new NuGetPackage(packName, new SemanticVersion(new Version(nr, nr)));
+            var packName = $"Package{nr}";
+            return new NuGetPackage(packName, new SemanticVersion(new Version(nr, nr)), new[] { new Version(1, 2, 3, 4) });
         }
 
         public static ResolutionResult GetResolutionResult()

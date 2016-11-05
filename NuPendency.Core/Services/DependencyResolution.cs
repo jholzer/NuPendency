@@ -1,9 +1,12 @@
+using DynamicData;
+using DynamicData.Binding;
 using NuGet;
 using NuPendency.Core.Interfaces;
 using NuPendency.Interfaces.Model;
 using NuPendency.Interfaces.Services;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Subjects;
 using System.Runtime.Versioning;
@@ -39,6 +42,7 @@ namespace NuPendency.Core.Services
                 m_CancellationToken = m_CancellationTokenSource.Token;
 
                 var result = new ResolutionResult(rootPackageName, targetFramework);
+
                 var rootPackageInfo = await Resolve(result.Packages, rootPackageName, 0, m_CancellationToken, targetFramework);
                 result.RootPackageId = rootPackageInfo.Id;
                 return result;
@@ -70,7 +74,7 @@ namespace NuPendency.Core.Services
             }
         }
 
-        private Task<NuGetPackage> Resolve(ObservableCollection<NuGetPackage> packages,
+        private Task<PackageBase> Resolve(ObservableCollection<PackageBase> packages,
             string packageName,
             int depth,
             CancellationToken cancellationToken,

@@ -1,6 +1,7 @@
 ﻿using NuPendency.Commons.Model;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Runtime.Versioning;
 
 namespace NuPendency.Interfaces.Model
@@ -15,7 +16,7 @@ namespace NuPendency.Interfaces.Model
             TargetFramework = targetFramework;
         }
 
-        public ObservableCollection<NuGetPackage> Packages { get; } = new ObservableCollection<NuGetPackage>();
+        public ObservableCollection<PackageBase> Packages { get; } = new ObservableCollection<PackageBase>();
 
         public Guid RootPackageId
         {

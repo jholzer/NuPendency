@@ -35,6 +35,7 @@ namespace NuPendency.Gui.ViewModels
         private readonly ISettingsManager<Settings> m_SettingsManager;
         private IEnumerable<Version> m_AllFoundRootVersions;
         private ObservableAsPropertyHelper<bool> m_IsActiveHelper;
+        private string m_Name;
         private ObservableAsPropertyHelper<int> m_NodeCountHelper;
         private Version m_SelectedVersion;
 
@@ -59,7 +60,18 @@ namespace NuPendency.Gui.ViewModels
         public ObservableCollectionExtended<GraphEdge> Edges { get; } = new ObservableCollectionExtended<GraphEdge>();
         public IGraphHandler GraphHandler { get; }
         public bool IsActive => m_IsActiveHelper.Value;
-        public string Name => ResolutionResult.RootPackageName;
+
+        public string Name
+        {
+            get { return m_Name; }
+            private set
+            {
+                if (m_Name == value) return;
+                m_Name = value;
+                raisePropertyChanged();
+            }
+        }
+
         public int NodeCount => m_NodeCountHelper.Value;
         public ObservableCollectionExtended<GraphNode> Nodes { get; } = new ObservableCollectionExtended<GraphNode>();
         public ResolutionResult ResolutionResult => GraphHandler.Result;
@@ -77,7 +89,7 @@ namespace NuPendency.Gui.ViewModels
 
         public Settings Settings => m_SettingsManager.Settings;
 
-        public GraphNode CreateDataNode(NuGetPackage pack)
+        public GraphNode CreateDataNode(PackageBase pack)
         {
             return new GraphNode
             {
@@ -90,9 +102,9 @@ namespace NuPendency.Gui.ViewModels
         {
             ResolutionResult.Packages
                 .ToObservableChangeSet()
-                .Filter(pack => pack is RootNuGetPackage)
+                .Filter(pack => pack.Depth == 0)
                 .ObserveOnDispatcher()
-                .Subscribe(set => FillVersions())
+                .Subscribe(set => HandleRootPackage())
                 .AddDisposableTo(Disposables);
 
             this.WhenAnyValue(vm => vm.SelectedVersion)
@@ -123,11 +135,12 @@ namespace NuPendency.Gui.ViewModels
                 .AddDisposableTo(Disposables);
         }
 
-        private void FillVersions()
+        private void HandleRootPackage()
         {
             if (!GraphHandler.Result.Packages.Any())
                 return;
-            var rootNuGetPackage = GraphHandler.Result.Packages.OfType<RootNuGetPackage>().Single();
+            var rootNuGetPackage = GraphHandler.Result.Packages.Single(pack => pack.Depth == 0);
+            Name = rootNuGetPackage.DisplayName;
             AllFoundRootVersions = rootNuGetPackage.AvailableVersions.OrderByDescending(version => version);
             SelectedVersion = AllFoundRootVersions.FirstOrDefault(version => version == rootNuGetPackage.VersionInfo.Version);
         }

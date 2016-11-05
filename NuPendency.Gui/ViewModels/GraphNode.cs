@@ -22,7 +22,7 @@ namespace NuPendency.Gui.ViewModels
         }
 
         public bool LockedForMove { get; set; }
-        public NuGetPackage Package { get; set; }
+        public PackageBase Package { get; set; }
 
         public Point Position
         {
@@ -53,7 +53,7 @@ namespace NuPendency.Gui.ViewModels
 
         public override string ToString()
         {
-            return $"{Package.PackageId}/{Package.VersionInfo}, Pos: X{Position.X:F1}/Y{Position.Y:F1}, Weight:{WeightFactor:F1}, Lock:{LockedForMove}, VelX: {Velocity.X:F1}/VelY: {Velocity.Y:F1}";
+            return $"{Package.DisplayName}/{Package.VersionInfo}, Pos: X{Position.X:F1}/Y{Position.Y:F1}, Weight:{WeightFactor:F1}, Lock:{LockedForMove}, VelX: {Velocity.X:F1}/VelY: {Velocity.Y:F1}";
         }
     }
 }

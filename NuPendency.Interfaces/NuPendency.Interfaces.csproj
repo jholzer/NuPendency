@@ -95,8 +95,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\MissingNuGetPackage.cs" />
-    <Compile Include="Model\RootNuGetPackage.cs" />
+    <Compile Include="Model\PackageBase.cs" />
+    <Compile Include="Model\ProjectPackage.cs" />
     <Compile Include="Model\SearchResult.cs" />
+    <Compile Include="Model\SolutionPackage.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Model\NuGetPackage.cs" />
     <Compile Include="Model\ResolutionResult.cs" />

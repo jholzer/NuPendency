@@ -17,7 +17,7 @@ namespace NuPendency.Core.Interfaces
 
     internal interface IResolutionEngine
     {
-        Task<NuGetPackage> Resolve(ObservableCollection<NuGetPackage> packages,
+        Task<PackageBase> Resolve(ObservableCollection<PackageBase> packages,
             string packageId,
             int depth,
             CancellationToken token,

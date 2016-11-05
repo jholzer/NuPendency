@@ -185,9 +185,6 @@
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\SelectionMode.cs" />
     <Compile Include="ViewModels\StringCollectionEditorViewModel.cs" />
-    <Compile Include="Views\DefaultGraphNodeControl.xaml.cs">
-      <DependentUpon>DefaultGraphNodeControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\GraphControl.xaml.cs">
       <DependentUpon>GraphControl.xaml</DependentUpon>
     </Compile>
@@ -196,6 +193,15 @@
     </Compile>
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Nodes\DefaultGraphNodeControl.xaml.cs">
+      <DependentUpon>DefaultGraphNodeControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Nodes\ProjectNodeControl.xaml.cs">
+      <DependentUpon>ProjectNodeControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Nodes\SolutionNodeControl.xaml.cs">
+      <DependentUpon>SolutionNodeControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\StringCollectionEditorView.xaml.cs">
       <DependentUpon>StringCollectionEditorView.xaml</DependentUpon>
@@ -220,10 +226,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\DefaultGraphNodeControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\GraphControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -235,6 +237,18 @@
     <Page Include="Views\MainWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Nodes\DefaultGraphNodeControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Nodes\ProjectNodeControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Nodes\SolutionNodeControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\StringCollectionEditorView.xaml">
       <SubType>Designer</SubType>

@@ -20,10 +20,9 @@ namespace NuPendency.Core.Services
             m_ResolutionFactory = resolutionFactory;
         }
 
-        public async Task<NuGetPackage> Resolve(ObservableCollection<NuGetPackage> packages, string packageId, int depth, CancellationToken token,
-            FrameworkName targetFramework = null, IVersionSpec versionSpec = null)
+        public async Task<PackageBase> Resolve(ObservableCollection<PackageBase> packages, string packageId, int depth, CancellationToken token, FrameworkName targetFramework = null, IVersionSpec versionSpec = null)
         {
-            var result = new NuGetPackage(packageId, new SemanticVersion(new Version())) { Depth = depth };
+            var result = new ProjectPackage(packageId, new SemanticVersion(new Version())) { Depth = depth };
             packages.Add(result);
 
             var baseDir = Path.GetDirectoryName(packageId);

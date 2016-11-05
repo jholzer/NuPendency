@@ -26,12 +26,7 @@ namespace NuPendency.Core.Services
             m_ResolutionFactory = resolutionFactory;
         }
 
-        public async Task<NuGetPackage> Resolve(ObservableCollection<NuGetPackage> packages,
-            string packageId,
-            int depth,
-            CancellationToken token,
-            FrameworkName targetFramework = null,
-            IVersionSpec versionSpec = null)
+        public async Task<PackageBase> Resolve(ObservableCollection<PackageBase> packages, string packageId, int depth, CancellationToken token, FrameworkName targetFramework = null, IVersionSpec versionSpec = null)
         {
             if (depth > m_SettingsManager.Settings.MaxSearchDepth)
                 return null;
@@ -44,8 +39,10 @@ namespace NuPendency.Core.Services
             if (package != null)
                 return package;
 
-            package = depth == 0 ? new RootNuGetPackage(packageInfo.Id, packageInfo.Version, await GetAvailableVersions(packageId)) : new NuGetPackage(packageInfo.Id, packageInfo.Version);
-            package.Depth = depth;
+            package = new NuGetPackage(packageInfo.Id, packageInfo.Version, await GetAvailableVersions(packageId))
+            {
+                Depth = depth
+            };
             packages.Add(package);
 
             if (token.IsCancellationRequested)

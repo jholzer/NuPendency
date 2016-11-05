@@ -21,14 +21,13 @@ namespace NuPendency.Core.Services
             m_ResolutionFactory = resolutionFactory;
         }
 
-        public async Task<NuGetPackage> Resolve(ObservableCollection<NuGetPackage> packages, string packageId, int depth, CancellationToken token,
-            FrameworkName targetFramework = null, IVersionSpec versionSpec = null)
+        public async Task<PackageBase> Resolve(ObservableCollection<PackageBase> packages, string packageId, int depth, CancellationToken token, FrameworkName targetFramework = null, IVersionSpec versionSpec = null)
         {
             var result = packages.FirstOrDefault(pack => pack.PackageId == packageId);
             if (result != null)
                 return result;
 
-            result = new NuGetPackage(packageId, new SemanticVersion(new Version())) { Depth = depth };
+            result = new SolutionPackage(packageId, new SemanticVersion(new Version())) { Depth = depth };
             packages.Add(result);
 
             if (token.IsCancellationRequested)

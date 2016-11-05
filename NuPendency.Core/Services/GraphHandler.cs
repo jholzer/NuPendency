@@ -1,6 +1,6 @@
-using System;
 using NuPendency.Interfaces.Model;
 using NuPendency.Interfaces.Services;
+using System;
 using System.Threading.Tasks;
 
 namespace NuPendency.Core.Services
@@ -15,21 +15,20 @@ namespace NuPendency.Core.Services
             Result = new ResolutionResult(name, null);
         }
 
-        public string Name => Result.RootPackageName;
+        public IObservable<bool> IsActive => m_DependencyResolution.IsActive;
         public ResolutionResult Result { get; }
 
-        public Task ResolveDependencies()
-        {
-            Result.Packages.Clear();
-            return m_DependencyResolution.FindInto(Result, TargetVersion);
-        }
+        public Version TargetVersion { get; set; }
 
         public void Cancel()
         {
             m_DependencyResolution.Cancel();
         }
 
-        public IObservable<bool> IsActive => m_DependencyResolution.IsActive;
-        public Version TargetVersion { get; set; }
+        public Task ResolveDependencies()
+        {
+            Result.Packages.Clear();
+            return m_DependencyResolution.FindInto(Result, TargetVersion);
+        }
     }
 }
