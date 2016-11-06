@@ -9,9 +9,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace NuPendency.Core.Services
+namespace NuPendency.Core.Services.ResolutionEngines
 {
-    internal class ProjectResolutionEngine : IProjectResolutionEngine
+    internal class ProjectResolutionEngine : ResolutionEngineBase, IProjectResolutionEngine
     {
         private readonly IResolutionFactory m_ResolutionFactory;
 
@@ -20,7 +20,7 @@ namespace NuPendency.Core.Services
             m_ResolutionFactory = resolutionFactory;
         }
 
-        public async Task<PackageBase> Resolve(ObservableCollection<PackageBase> packages, string packageId, int depth, CancellationToken token, FrameworkName targetFramework = null, IVersionSpec versionSpec = null)
+        protected override async Task<PackageBase> DoResolve(ObservableCollection<PackageBase> packages, string packageId, int depth, CancellationToken token, FrameworkName targetFramework = null, IVersionSpec versionSpec = null)
         {
             var result = new ProjectPackage(packageId, new SemanticVersion(new Version())) { Depth = depth };
             packages.Add(result);

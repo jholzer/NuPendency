@@ -1,19 +1,19 @@
-using NuGet;
-using NuPendency.Commons.Interfaces;
-using NuPendency.Core.Interfaces;
-using NuPendency.Interfaces.Model;
-using NuPendency.Interfaces.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.Versioning;
 using System.Threading;
 using System.Threading.Tasks;
+using NuGet;
+using NuPendency.Commons.Interfaces;
+using NuPendency.Core.Interfaces;
+using NuPendency.Interfaces.Model;
+using NuPendency.Interfaces.Services;
 using Settings = NuPendency.Interfaces.Settings;
 
-namespace NuPendency.Core.Services
+namespace NuPendency.Core.Services.ResolutionEngines
 {
-    internal class NuGetResolutionEngine : INuGetResolutionEngine
+    internal class NuGetResolutionEngine : ResolutionEngineBase, INuGetResolutionEngine
     {
         private readonly IRepositoryService m_RepositoryService;
         private readonly IResolutionFactory m_ResolutionFactory;
@@ -26,7 +26,7 @@ namespace NuPendency.Core.Services
             m_ResolutionFactory = resolutionFactory;
         }
 
-        public async Task<PackageBase> Resolve(ObservableCollection<PackageBase> packages, string packageId, int depth, CancellationToken token, FrameworkName targetFramework = null, IVersionSpec versionSpec = null)
+        protected override async Task<PackageBase> DoResolve(ObservableCollection<PackageBase> packages, string packageId, int depth, CancellationToken token, FrameworkName targetFramework = null, IVersionSpec versionSpec = null)
         {
             var packageInfo = await m_RepositoryService.Find(packageId, versionSpec);
             if (packageInfo == null)

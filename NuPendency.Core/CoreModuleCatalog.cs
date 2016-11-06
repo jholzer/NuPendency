@@ -3,6 +3,7 @@ using NuPendency.Commons.Interfaces;
 using NuPendency.Commons.Model;
 using NuPendency.Core.Interfaces;
 using NuPendency.Core.Services;
+using NuPendency.Core.Services.ResolutionEngines;
 using NuPendency.Interfaces;
 using NuPendency.Interfaces.Services;
 

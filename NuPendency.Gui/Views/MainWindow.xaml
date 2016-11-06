@@ -11,9 +11,10 @@
         xmlns:ui="clr-namespace:NuPendency.Commons.Ui;assembly=NuPendency.Commons"
         xmlns:Properties="clr-namespace:NuPendency.Gui.Properties"
         mc:Ignorable="d"
+
         DataContext="{Binding MainWindowViewModel, Source={StaticResource Locator}}"
         d:DesignHeight="600" d:DesignWidth="1024"
-        Title="NuPendency" Icon="/NuPendency.Gui;component/Resources/nuPendency.ico">
+        Title="NuPendency" Icon="/NuPendency.Gui;component/Resources/nuPendency.ico" WindowState="Maximized">
     <Window.Resources>
         <converters1:NullToVisibilityConverter NullValue="Hidden" NotNullValue="Visible" x:Key="NullToHiddenConverter" />
         <converters1:BoolToVisibilityConverter TrueValue="Visible" FalseValue="Collapsed" x:Key="BoolToVisibilityConverter" />

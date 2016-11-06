@@ -104,13 +104,14 @@
     <Compile Include="Services\DependencyResolution.cs" />
     <Compile Include="Services\GraphHandler.cs" />
     <Compile Include="Services\GraphManager.cs" />
-    <Compile Include="Services\NuGetResolutionEngine.cs" />
-    <Compile Include="Services\ProjectResolutionEngine.cs" />
     <Compile Include="Services\RepositoryService.cs" />
+    <Compile Include="Services\ResolutionEngines\NuGetResolutionEngine.cs" />
+    <Compile Include="Services\ResolutionEngines\ProjectResolutionEngine.cs" />
+    <Compile Include="Services\ResolutionEngines\ResolutionEngineBase.cs" />
+    <Compile Include="Services\ResolutionEngines\SolutionResolutionEngine.cs" />
     <Compile Include="Services\ResolutionFactory.cs" />
     <Compile Include="Services\RespotitoryManager.cs" />
     <Compile Include="Services\SearchWrapper.cs" />
-    <Compile Include="Services\SolutionResolutionEngine.cs" />
     <Compile Include="Services\VersionExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
