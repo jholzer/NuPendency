@@ -49,7 +49,7 @@ namespace NuPendency.Core.Services
                         continue;
 
                     var dependingPackage = await resolutionEngine.Resolve(packages, projectPath, depth + 1, token, targetFramework, versionSpec);
-                    result.Dependencies.Add(dependingPackage.Id);
+                    result.Dependencies.Add(dependingPackage);
 
                     if (token.IsCancellationRequested)
                         break;

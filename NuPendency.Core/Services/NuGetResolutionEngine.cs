@@ -28,9 +28,6 @@ namespace NuPendency.Core.Services
 
         public async Task<PackageBase> Resolve(ObservableCollection<PackageBase> packages, string packageId, int depth, CancellationToken token, FrameworkName targetFramework = null, IVersionSpec versionSpec = null)
         {
-            if (depth > m_SettingsManager.Settings.MaxSearchDepth)
-                return null;
-
             var packageInfo = await m_RepositoryService.Find(packageId, versionSpec);
             if (packageInfo == null)
                 return null;
@@ -38,6 +35,9 @@ namespace NuPendency.Core.Services
             var package = packages.FirstOrDefault(pack => pack.PackageId == packageInfo.Id && pack.VersionInfo == packageInfo.Version);
             if (package != null)
                 return package;
+
+            if (depth > m_SettingsManager.Settings.MaxSearchDepth)
+                return null;
 
             package = new NuGetPackage(packageInfo.Id, packageInfo.Version, await GetAvailableVersions(packageId))
             {
@@ -58,7 +58,7 @@ namespace NuPendency.Core.Services
 
                     var dependingPackage = await resolutionEngine.Resolve(packages, dependency.Id, depth + 1, token, targetFramework, dependency.VersionSpec) ??
                                            new MissingNuGetPackage(dependency.Id);
-                    package.Dependencies.Add(dependingPackage.Id);
+                    package.Dependencies.Add(dependingPackage);
 
                     if (token.IsCancellationRequested)
                         break;

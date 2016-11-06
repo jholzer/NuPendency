@@ -14,10 +14,9 @@ namespace NuPendency.Interfaces.Model
         }
 
         public Version[] AvailableVersions { get; }
-        public ObservableCollection<Guid> Dependencies { get; } = new ObservableCollection<Guid>();
+        public ObservableCollection<PackageBase> Dependencies { get; } = new ObservableCollection<PackageBase>();
         public int Depth { get; set; }
         public abstract string DisplayName { get; }
-        public Guid Id { get; } = Guid.NewGuid();
         public string PackageId { get; }
         public SemanticVersion VersionInfo { get; }
     }

@@ -154,7 +154,9 @@ namespace NuPendency.Gui.Views
         {
             foreach (var node in nodes)
             {
-                foreach (var dependingNode in nodes.Where(on => node.Package.Dependencies.ToArray().Contains(on.Package.Id)))
+                var dependencies = node.Package.Dependencies.ToArray();
+                var dependingNodes = nodes.Where(on => dependencies.Contains(on.Package));
+                foreach (var dependingNode in dependingNodes)
                 {
                     var matchingEdge = GraphEdges.SingleOrDefault(edge => (edge.Node == node && edge.DependingNode == dependingNode));
                     if (matchingEdge == null)

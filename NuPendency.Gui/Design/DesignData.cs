@@ -17,10 +17,8 @@ namespace NuPendency.Gui.Design
         {
             var res = new ResolutionResult("Package0", null);
             res.Packages.AddRange(Enumerable.Range(0, 5).Select(GetNuGetPackage));
-            res.RootPackageId = res.Packages.Select(pack => pack.Id).First();
-
-            var rootPack = res.Packages.First(pack => pack.Id == res.RootPackageId);
-            rootPack.Dependencies.AddRange(res.Packages.Select(pack => pack.Id).Where(id => id != res.RootPackageId));
+            res.RootPackage = res.Packages.First();
+            res.RootPackage.Dependencies.AddRange(res.Packages.Where(pack => pack != res.RootPackage));
             return res;
         }
     }

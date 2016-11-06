@@ -44,7 +44,7 @@ namespace NuPendency.Core.Services
                 var result = new ResolutionResult(rootPackageName, targetFramework);
 
                 var rootPackageInfo = await Resolve(result.Packages, rootPackageName, 0, m_CancellationToken, targetFramework);
-                result.RootPackageId = rootPackageInfo.Id;
+                result.RootPackage = rootPackageInfo;
                 return result;
             }
         }
@@ -70,7 +70,7 @@ namespace NuPendency.Core.Services
                 if (rootPackageInfo == null)
                     return;
 
-                resultContainer.RootPackageId = rootPackageInfo.Id;
+                resultContainer.RootPackage = rootPackageInfo;
             }
         }
 

@@ -8,7 +8,7 @@ namespace NuPendency.Interfaces.Model
 {
     public class ResolutionResult : BaseObject
     {
-        private Guid m_RootPackageId;
+        private PackageBase m_RootPackage;
 
         public ResolutionResult(string rootPackageName, FrameworkName targetFramework)
         {
@@ -18,13 +18,13 @@ namespace NuPendency.Interfaces.Model
 
         public ObservableCollection<PackageBase> Packages { get; } = new ObservableCollection<PackageBase>();
 
-        public Guid RootPackageId
+        public PackageBase RootPackage
         {
-            get { return m_RootPackageId; }
+            get { return m_RootPackage; }
             set
             {
-                if (m_RootPackageId == value) return;
-                m_RootPackageId = value;
+                if (m_RootPackage == value) return;
+                m_RootPackage = value;
                 RaisePropertyChanged();
             }
         }

@@ -171,7 +171,7 @@ namespace NuPendency.Gui.ViewModels
             var graphNodes = Nodes.ToArray();
             foreach (var graphNode in graphNodes)
             {
-                graphNode.ReferencedByCount = graphNodes.SelectMany(node => node.Package.Dependencies.ToArray()).Count(dep => dep == graphNode.Package.Id);
+                graphNode.ReferencedByCount = graphNodes.SelectMany(node => node.Package.Dependencies.ToArray()).Count(dep => dep == graphNode.Package);
             }
 
             foreach (var graphNode in graphNodes)
