@@ -26,10 +26,7 @@ namespace NuPendency.Core.Services
                     {
                         return m_InstanceCreator.CreateInstance<ISolutionResolutionEngine>(new ConstructorArgument[] { });
                     }
-                    if (extension.EndsWith(".csproj", StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        return m_InstanceCreator.CreateInstance<IProjectResolutionEngine>(new ConstructorArgument[] { });
-                    }
+                    return m_InstanceCreator.CreateInstance<IProjectResolutionEngine>(new ConstructorArgument[] { });
                 }
                 return null;
             }

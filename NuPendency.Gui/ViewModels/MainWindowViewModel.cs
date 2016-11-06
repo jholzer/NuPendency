@@ -130,13 +130,6 @@ namespace NuPendency.Gui.ViewModels
                 .Subscribe()
                 .AddDisposableTo(Disposables);
 
-            //m_GraphManager.Documents.ToObservableChangeSet(handler => handler == SelectedGraph?.GraphHandler)
-            //    .WhereReasonsAre(ChangeReason.Remove)
-            //    .ObserveOnDispatcher()
-            //    .Do(set => SelectedGraph = null)
-            //    .Subscribe()
-            //    .AddDisposableTo(Disposables);
-
             CmdAddNewGraph = ReactiveCommand.CreateAsyncTask(_ =>
             {
                 Action<string> okaction = name =>
@@ -161,7 +154,7 @@ namespace NuPendency.Gui.ViewModels
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog
                 {
-                    Filter = "VS Solution (*.sln) | *.sln",
+                    Filter = "VS Solution (*.sln) | *.sln|C# Project (*.csproj)|*.csproj|Visual Basic Project (*.vbproj)|*.vbproj|Visual C++ Project (*.vcxproj)|*.vcxproj | All files (*.*)|*.*",
                     Multiselect = false
                 };
                 var result = openFileDialog.ShowDialog();
