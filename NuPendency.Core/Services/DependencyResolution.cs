@@ -5,6 +5,7 @@ using NuPendency.Core.Interfaces;
 using NuPendency.Interfaces.Model;
 using NuPendency.Interfaces.Services;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Disposables;
@@ -45,6 +46,9 @@ namespace NuPendency.Core.Services
 
                 var rootPackageInfo = await Resolve(result.Packages, rootPackageName, 0, m_CancellationToken, targetFramework);
                 result.RootPackage = rootPackageInfo;
+
+                TryToFixMissingPackages(result);
+
                 return result;
             }
         }
@@ -71,6 +75,8 @@ namespace NuPendency.Core.Services
                     return;
 
                 resultContainer.RootPackage = rootPackageInfo;
+
+                TryToFixMissingPackages(resultContainer);
             }
         }
 
@@ -91,6 +97,25 @@ namespace NuPendency.Core.Services
         {
             m_Active.OnNext(true);
             return Disposable.Create(() => m_Active.OnNext(false));
+        }
+
+        private void TryToFixMissingPackages(ResolutionResult result)
+        {
+            foreach (var package in result.Packages)
+            {
+                if (!package.Dependencies.OfType<MissingNuGetPackage>().Any())
+                    continue;
+
+                foreach (var missingPackage in package.Dependencies.OfType<MissingNuGetPackage>().ToArray())
+                {
+                    var replacementPackage = result.Packages.SingleOrDefault(p => p.PackageId == missingPackage.PackageId);
+                    if (replacementPackage == null)
+                        continue;
+
+                    package.Dependencies.Add(replacementPackage);
+                    package.Dependencies.Remove(missingPackage);
+                }
+            }
         }
     }
 }
