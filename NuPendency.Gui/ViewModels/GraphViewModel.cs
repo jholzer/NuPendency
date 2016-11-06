@@ -147,7 +147,7 @@ namespace NuPendency.Gui.ViewModels
 
         private void RemoveOrphanedEdges()
         {
-            var removeEdges = Edges.Where(edge => !Nodes.Contains(edge.Node1) || !Nodes.Contains(edge.Node2)).ToArray();
+            var removeEdges = Edges.Where(edge => !Nodes.Contains(edge.Node) || !Nodes.Contains(edge.DependingNode)).ToArray();
             foreach (var edge in removeEdges)
             {
                 Edges.Remove(edge);

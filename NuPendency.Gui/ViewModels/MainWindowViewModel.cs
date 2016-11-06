@@ -1,5 +1,6 @@
 ﻿using DynamicData;
 using DynamicData.Binding;
+using Microsoft.Win32;
 using NuPendency.Commons.Extensions;
 using NuPendency.Commons.Interfaces;
 using NuPendency.Commons.Ui;
@@ -35,6 +36,7 @@ namespace NuPendency.Gui.ViewModels
         public ReactiveCommand<Unit> CmdAddNewGraph { get; private set; }
         public ReactiveCommand<Unit> CmdCancel { get; private set; }
         public ReactiveCommand<Unit> CmdDeleteGraph { get; private set; }
+        public ReactiveCommand<Unit> CmdOpenSolution { get; private set; }
         public ReactiveCommand<Unit> CmdRefreshGraph { get; private set; }
 
         public DialogViewModelBase DialogViewModel
@@ -151,6 +153,27 @@ namespace NuPendency.Gui.ViewModels
                 var inputVm = m_ViewModelFactory.CreateInputBoxViewModel("Enter name of Packge to investigate", okaction, cancelAction);
 
                 ShowDialog(inputVm);
+
+                return Task.FromResult(Unit.Default);
+            }).AddDisposableTo(Disposables);
+
+            CmdOpenSolution = ReactiveCommand.CreateAsyncTask(_ =>
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog
+                {
+                    Filter = "VS Solution (*.sln) | *.sln",
+                    Multiselect = false
+                };
+                var result = openFileDialog.ShowDialog();
+
+                if (!result.HasValue || !result.Value)
+                    return Task.FromResult(false);
+
+                var graphHandler = m_GraphManager.CreateNewDocument(openFileDialog.FileName);
+                Task.Run(() =>
+                {
+                    graphHandler.ResolveDependencies();
+                });
 
                 return Task.FromResult(Unit.Default);
             }).AddDisposableTo(Disposables);

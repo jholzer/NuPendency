@@ -16,9 +16,9 @@ namespace NuPendency.Core.Services
 
         public ObservableCollection<IGraphHandler> Documents { get; } = new ObservableCollection<IGraphHandler>();
 
-        public IGraphHandler CreateNewDocument(string name)
+        public IGraphHandler CreateNewDocument(string packageId)
         {
-            var graphHandler = m_InstanceCreator.CreateInstance<IGraphHandler>(new[] { new ConstructorArgument("name", name) });
+            var graphHandler = m_InstanceCreator.CreateInstance<IGraphHandler>(new[] { new ConstructorArgument("packageId", packageId) });
             Documents.Add(graphHandler);
 
             return graphHandler;

@@ -9,10 +9,10 @@ namespace NuPendency.Gui.ViewModels
         private bool m_Selected;
         private Point m_StartPoint;
 
-        public GraphEdge(GraphNode node1, GraphNode node2)
+        public GraphEdge(GraphNode node, GraphNode dependingNode)
         {
-            Node1 = node1;
-            Node2 = node2;
+            Node = node;
+            DependingNode = dependingNode;
         }
 
         public Point EndPoint
@@ -26,8 +26,8 @@ namespace NuPendency.Gui.ViewModels
             }
         }
 
-        public GraphNode Node1 { get; }
-        public GraphNode Node2 { get; }
+        public GraphNode Node { get; }
+        public GraphNode DependingNode { get; }
 
         public bool Selected
         {

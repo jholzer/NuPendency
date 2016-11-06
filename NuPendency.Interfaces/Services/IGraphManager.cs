@@ -7,7 +7,7 @@ namespace NuPendency.Interfaces.Services
     {
         ObservableCollection<IGraphHandler> Documents { get; }
 
-        IGraphHandler CreateNewDocument(string name);
+        IGraphHandler CreateNewDocument(string packageId);
 
         void Delete(IGraphHandler doc);
     }

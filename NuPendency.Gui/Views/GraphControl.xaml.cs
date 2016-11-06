@@ -154,18 +154,18 @@ namespace NuPendency.Gui.Views
         {
             foreach (var node in nodes)
             {
-                foreach (var otherNode in nodes.Where(on => node.Package.Dependencies.ToArray().Contains(on.Package.Id)))
+                foreach (var dependingNode in nodes.Where(on => node.Package.Dependencies.ToArray().Contains(on.Package.Id)))
                 {
-                    var matchingEdge = GraphEdges.SingleOrDefault(edge => (edge.Node1 == node && edge.Node2 == otherNode));
+                    var matchingEdge = GraphEdges.SingleOrDefault(edge => (edge.Node == node && edge.DependingNode == dependingNode));
                     if (matchingEdge == null)
                     {
-                        matchingEdge = new GraphEdge(node, otherNode);
+                        matchingEdge = new GraphEdge(node, dependingNode);
                         GraphEdges.Add(matchingEdge);
                     }
 
                     matchingEdge.StartPoint = node.Position;
-                    matchingEdge.EndPoint = otherNode.Position;
-                    matchingEdge.Selected = node.IsSelected() || otherNode.IsSelected();
+                    matchingEdge.EndPoint = dependingNode.Position;
+                    matchingEdge.Selected = node.IsSelected() || dependingNode.IsSelected();
                 }
             }
         }
@@ -231,7 +231,7 @@ namespace NuPendency.Gui.Views
 
         private void HighlightToRootNode(GraphNode node)
         {
-            var nodesToBeHightlighted = GraphEdges.Where(edge => edge.Node2 == node).Select(edge => edge.Node1).ToArray();
+            var nodesToBeHightlighted = GraphEdges.Where(edge => edge.DependingNode == node).Select(edge => edge.Node).ToArray();
             foreach (var highLightNode in nodesToBeHightlighted)
             {
                 highLightNode.Highlight();

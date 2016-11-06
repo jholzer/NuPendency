@@ -7,12 +7,12 @@ namespace NuPendency.Gui.ViewModels
     {
         public static bool IsNodeContainedInEdge(this GraphEdge edge, GraphNode node)
         {
-            return edge.Node1 == node || edge.Node2 == node;
+            return edge.Node == node || edge.DependingNode == node;
         }
 
         public static GraphNode GetOtherNode(this GraphEdge edge, GraphNode node)
         {
-            return edge.Node1 == node ? edge.Node2 : edge.Node1;
+            return edge.Node == node ? edge.DependingNode : edge.Node;
         }
     }
 }

@@ -9,10 +9,10 @@ namespace NuPendency.Core.Services
     {
         private readonly IDependencyResolution m_DependencyResolution;
 
-        public GraphHandler(string name, IDependencyResolution dependencyResolution)
+        public GraphHandler(string packageId, IDependencyResolution dependencyResolution)
         {
             m_DependencyResolution = dependencyResolution;
-            Result = new ResolutionResult(name, null);
+            Result = new ResolutionResult(packageId, null);
         }
 
         public IObservable<bool> IsActive => m_DependencyResolution.IsActive;

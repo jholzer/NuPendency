@@ -69,6 +69,13 @@
                             <Label Content="Add new graph" />
                         </StackPanel>
                     </Button>
+
+                    <Button Command="{Binding CmdOpenSolution}">
+                        <StackPanel Margin="3" Orientation="Horizontal">
+                            <fa:ImageAwesome Icon="FolderOpen" Height="16" Width="16" />
+                            <Label Content="Read From Solution" />
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
 
                 <ListView Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Graphs}" MinWidth="250"
