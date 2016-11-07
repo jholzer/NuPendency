@@ -10,10 +10,10 @@ namespace NuPendency.Interfaces
         {
             var settings = new Settings
             {
-                AttractionStrength = 0.2D,  //= 0.5D;
+                AttractionStrength = 0.3D,  //= 0.5D;
                 Damping = 0.9D,             //0.9D;
-                RepulsionClipping = 300D,   //200D;
-                RepulsionStrength = 3000D,//1200D;
+                RepulsionClipping = 4000D,   //200D;
+                RepulsionStrength = 2500D,//1200D;
                 TimeStep = 0.95,
                 MaxSearchDepth = 4
             };
