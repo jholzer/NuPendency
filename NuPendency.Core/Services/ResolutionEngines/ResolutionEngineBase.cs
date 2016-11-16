@@ -15,14 +15,14 @@ namespace NuPendency.Core.Services.ResolutionEngines
         {
             var result = await DoResolve(packages, packageId, depth, token, targetFramework, versionSpec);
 
-            TryToFixMissingPackages(packages);
+            TryToFixMissingPackages(packages, depth + 1);
 
             return result;
         }
 
         protected abstract Task<PackageBase> DoResolve(ObservableCollection<PackageBase> packages, string packageId, int depth, CancellationToken token, FrameworkName targetFramework, IVersionSpec versionSpec);
 
-        private static void TryToFixMissingPackages(ObservableCollection<PackageBase> packages)
+        private static void TryToFixMissingPackages(ObservableCollection<PackageBase> packages, int targetDepth)
         {
             foreach (var package in packages)
             {
@@ -34,6 +34,9 @@ namespace NuPendency.Core.Services.ResolutionEngines
                     var replacementPackage = packages.SingleOrDefault(p => p.PackageId == missingPackage.PackageId);
                     if (replacementPackage == null)
                         continue;
+
+                    if (replacementPackage.Depth > targetDepth)
+                        replacementPackage.Depth = targetDepth;
 
                     package.Dependencies.Add(replacementPackage);
                     package.Dependencies.Remove(missingPackage);
